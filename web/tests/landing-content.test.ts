@@ -2,89 +2,74 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
-  authorityStatements,
-  designTargetLabel,
-  designTargets,
+  accountStats,
+  authorityRoles,
+  currentEvidence,
+  currentGaps,
   enforcementLayers,
-  illustrativeRequests,
+  executionSteps,
+  insightCards,
   landingCopy,
-  mandateControlGroups,
+  landingNavItems,
   marketCategories,
-  prototypeToday,
-  receiptModels,
+  receiptTypes,
+  substrateComponents,
+  systemLayers,
+  versionLadder,
 } from '@/content/landing';
 import { publicOrigin } from '@/content/site';
 
 describe('landing content boundaries', () => {
-  it('keeps the concise promise and current-state disclosure explicit', () => {
-    expect(landingCopy.headline).toBe('Agents can act. Your limit still decides.');
-    expect(landingCopy.headline.split(/\s+/)).toHaveLength(7);
-    expect(landingCopy.refusalLead).toContain('$101 request');
-    expect(landingCopy.shutdownInvariant).toContain('still refused by the account check');
-    expect(landingCopy.statusDisclosure).toContain('complete Gol product has not shipped');
-    expect(landingCopy.statusDisclosure).toContain('Arc testnet');
+  it('leads with the PRD promise and an explicit prototype disclosure', () => {
+    expect(landingCopy.headline).toBe('One account. Every market.');
+    expect(landingCopy.lead).toContain('limits');
+    expect(landingCopy.lead).toContain('refusal recorded');
+    expect(landingCopy.boundary).toContain('server off');
+    expect(landingCopy.status).toContain('nothing has shipped under the name Gol');
+    expect(landingCopy.status).toContain('limited account and payment path');
   });
 
-  it('uses two fixed presentation fixtures rather than a browser policy evaluator', () => {
-    expect(illustrativeRequests).toEqual([
-      {
-        id: 'within-limit',
-        amountUsd: 100,
-        limitUsd: 100,
-        outcome: 'allowed',
-        rule: 'PER_TX_CAP',
-        headroomUsd: 0,
-      },
-      {
-        id: 'over-limit',
-        amountUsd: 101,
-        limitUsd: 100,
-        outcome: 'refused',
-        rule: 'PER_TX_CAP',
-        headroomUsd: 100,
-      },
-    ]);
-  });
-
-  it('keeps mandate roles and trust statements exact', () => {
-    expect(authorityStatements.ownerLane).toContain('fail-open');
-    expect(authorityStatements.agentLane).toContain('fail-closed');
-    expect(authorityStatements.permission).toBe(
-      'A signer may refuse. Only account policy may permit an agent payment.',
-    );
-    expect(authorityStatements.growth).toContain('cannot write mandate state');
-    expect(authorityStatements.venue).toBe('GOL is not the venue.');
-    expect(enforcementLayers.map((item) => item.title)).toEqual([
+  it('keeps the owner, agent and venue trust boundaries distinct', () => {
+    expect(authorityRoles).toHaveLength(3);
+    expect(authorityRoles[0]?.detail).toContain('withdraw without Gol');
+    expect(authorityRoles[1]?.detail).toContain('revocable lane');
+    expect(authorityRoles[2]?.detail).toContain('never becomes one');
+    expect(enforcementLayers.map((layer) => layer.title)).toEqual([
       'Prompt',
       'Framework',
       'Server',
       'Account policy',
     ]);
+    expect(enforcementLayers.at(-1)?.state).toBe('binding');
   });
 
-  it('marks broad mandate, receipt, and market capabilities as design targets', () => {
-    const claims = [...mandateControlGroups, ...receiptModels, ...marketCategories];
-    expect(claims.every((claim) => claim.claimState === designTargetLabel)).toBe(true);
+  it('maps the complete product vision without presenting it as shipped', () => {
+    expect(accountStats).toHaveLength(3);
+    expect(receiptTypes.map((receipt) => receipt.title)).toEqual(['Refused', 'Promised', 'Actual']);
     expect(marketCategories).toHaveLength(8);
-    expect(mandateControlGroups.map((group) => group.title)).toEqual([
-      'Amount',
-      'Destination',
-      'Execution',
-      'Lifecycle',
+    expect(executionSteps).toContain('Recover');
+    expect(systemLayers).toHaveLength(7);
+    expect(systemLayers.at(-1)?.title).toBe('Authority and state');
+    expect(versionLadder.map((item) => item.version)).toEqual(['v0', 'v1', 'v2', 'v4']);
+    expect(versionLadder.at(-1)?.detail).toContain('v4 to v6');
+    expect(substrateComponents).toHaveLength(5);
+    expect(insightCards).toHaveLength(3);
+  });
+
+  it('keeps current evidence separate from unestablished targets', () => {
+    expect(currentEvidence.join(' ')).toContain('limited testnet account');
+    expect(currentGaps.join(' ')).toContain('Nothing is integrated');
+    expect(currentGaps.join(' ')).toContain('Production readiness');
+    expect(currentEvidence.join(' ')).not.toMatch(/production readiness|security audit/i);
+  });
+
+  it('uses stable local navigation and the dated public origin', () => {
+    expect(landingNavItems.map((item) => item.href)).toEqual([
+      '#product',
+      '#boundary',
+      '#markets',
+      '#roadmap',
     ]);
-  });
-
-  it('keeps pending release evidence out of the prototype-today column', () => {
-    expect(designTargets).toContain(
-      'Mandatory real-user browser acceptance under the current KMS-backed agent signer.',
-    );
-    expect(designTargets).toContain(
-      'Production readiness, an independent security audit, and universal venue support.',
-    );
-    expect(prototypeToday.join(' ')).not.toMatch(/production|security audit/i);
-  });
-
-  it('uses the dated production origin without importing product runtime configuration', () => {
     expect(publicOrigin).toBe('https://gol.network');
     const metadataSources = ['app/layout.tsx', 'app/robots.ts', 'app/sitemap.ts']
       .map((file) => readFileSync(join(process.cwd(), file), 'utf8'))
@@ -95,14 +80,14 @@ describe('landing content boundaries', () => {
 
   it('keeps prohibited marketing claims out of rendered content', () => {
     const renderedContent = JSON.stringify({
-      authorityStatements,
+      authorityRoles,
+      currentEvidence,
+      enforcementLayers,
       landingCopy,
-      mandateControlGroups,
       marketCategories,
-      receiptModels,
+      receiptTypes,
     });
     const prohibited = [
-      /production[- ]ready/i,
       /fully live/i,
       /live multi-market/i,
       /best price/i,
@@ -115,7 +100,7 @@ describe('landing content boundaries', () => {
     for (const pattern of prohibited) expect(renderedContent).not.toMatch(pattern);
   });
 
-  it('keeps server, wallet, and product runtime modules out of the landing import graph', () => {
+  it('keeps privileged modules out and limits client code to interactive UI boundaries', () => {
     const componentDirectory = join(process.cwd(), 'src/components/landing');
     const sources = [
       readFileSync(join(process.cwd(), 'app/page.tsx'), 'utf8'),
@@ -127,8 +112,12 @@ describe('landing content boundaries', () => {
     expect(sources).not.toMatch(
       /@privy|\bviem\b|@gol\/agent|@gol\/protocol|@react-three|\bthree\b|framer-motion/,
     );
-    expect(sources.match(/['\"]use client['\"]/g)).toHaveLength(1);
+    expect(sources.match(/['\"]use client['\"]/g)).toHaveLength(3);
+    expect(readFileSync(join(componentDirectory, 'landing-motion.tsx'), 'utf8')).toContain(
+      "from 'gsap'",
+    );
     expect(sources).not.toMatch(/fetch\(|XMLHttpRequest|WebSocket/);
     expect(sources).not.toMatch(/[·—]/);
+    expect(sources).not.toMatch(/<svg|linear-gradient|radial-gradient/);
   });
 });

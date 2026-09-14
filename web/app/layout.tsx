@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { DM_Sans, JetBrains_Mono, Silkscreen } from 'next/font/google';
+import { SiteTransition } from '@/components/site-transition';
 import { publicOrigin } from '@/content/site';
 import './globals.css';
 
@@ -30,11 +31,11 @@ export const metadata: Metadata = {
     shortcut: '/gol-mark-blue.svg',
   },
   title: {
-    default: 'Gol | On-chain limits for AI agents',
+    default: 'Gol | One account. Every market.',
     template: '%s | Gol',
   },
   description:
-    'A proposed account model where owners set enforceable limits for agents and keep a record of allowed and refused actions.',
+    'One account where AI agents can act across markets inside owner-defined limits, with a record of every refused action.',
   other: {
     // Base Build domain-ownership verification for the canonical production origin.
     'base:app_id': '6aa1a55014c95246af9c958f',
@@ -47,7 +48,12 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       lang="en"
       className={`${dmSans.variable} ${jetBrainsMono.variable} ${silkscreen.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <SiteTransition>{children}</SiteTransition>
+        <noscript>
+          <style>{'[data-site-loader] { display: none !important; }'}</style>
+        </noscript>
+      </body>
     </html>
   );
 }

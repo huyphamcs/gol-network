@@ -1,5 +1,8 @@
 # GOL production operations
 
+For the complete step-by-step operator procedure, see [RUNBOOK.md](RUNBOOK.md). This page
+keeps the component-level deployment details referenced by that runbook.
+
 The selected target is the existing EC2 instance named `gol-production`
 (`i-0551fb8ae101f65d0` in `ap-northeast-1`, Elastic IP `16.76.174.242`). Public HTTPS is
 `https://gol.network`. These commands activate a release on that host; they do not create or

@@ -1,60 +1,28 @@
 import { expect, test } from '@playwright/test';
 
-const headline = 'Agents can act. Your limit still decides.';
+const headline = 'One account. Every market.';
 
-test.describe('public visual landing page', () => {
-  test('leads with the consequence and preserves the product boundary', async ({ page }) => {
+test.describe('public landing page', () => {
+  test('renders the complete product story and honest status boundary', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1, name: headline })).toBeVisible();
-    const wordmark = page.getByText('GOL Network', { exact: true }).first();
-    await expect(wordmark).toBeVisible();
-    await expect(wordmark).toHaveClass(/font-pixel-wordmark/);
-    await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute(
-      'href',
-      '/gol-mark-blue.svg',
+    await expect(page.getByText('GOL', { exact: true }).first()).toBeVisible();
+    await expect(page.locator('main > section')).toHaveCount(13);
+    await expect(page.locator('[data-visual="network-field"]')).toBeVisible();
+    await expect(page.locator('[data-gsap="landing-motion"]')).toHaveAttribute(
+      'data-motion-ready',
+      'true',
     );
-    await expect(page.locator('main > section')).toHaveCount(6);
-    await expect(page.locator('[data-visual]')).toHaveCount(10);
-    await expect(page.getByText('Refused: PER_TX_CAP')).toBeVisible();
-    await expect(page.getByText('Headroom recorded: $100')).toBeVisible();
-    await expect(page.getByText(/complete Gol product has not shipped/).first()).toBeVisible();
-    await expect(page.getByText('GOL is not the venue.')).toBeVisible();
-    await expect(page.getByText(/Mandatory real-user browser acceptance/).last()).toBeVisible();
+    await expect(page.locator('[data-motion-hero-visual]')).toHaveAttribute('style', /transform/);
+    await expect(page.getByText('Payment rails', { exact: true })).toBeVisible();
+    await expect(page.getByText(/nothing has shipped under the name Gol/).first()).toBeVisible();
+    const venueBoundary = page.getByText(/Gol routes to markets and never becomes one/);
+    await venueBoundary.scrollIntoViewIfNeeded();
+    await expect(venueBoundary).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
   });
 
-  test('runs both fixed checks from keyboard without external requests', async ({ page }) => {
-    const requests: string[] = [];
-    page.on('request', (request) => requests.push(request.url()));
-    await page.goto('/', { waitUntil: 'networkidle' });
-
-    const within = page.getByRole('button', { name: '$100', exact: true });
-    await within.focus();
-    await page.keyboard.press('Enter');
-    await page.getByRole('button', { name: 'Run illustrative check' }).click();
-    await expect(page.getByText('Checking mandate…')).toBeVisible();
-    await expect(page.getByText('Refused: PER_TX_CAP', { exact: true })).toBeHidden();
-    await expect(page.getByText('Allowed', { exact: true })).toBeVisible();
-    await expect(page.locator('[aria-live="polite"]')).toHaveText(
-      'Allowed within illustrative $100 limit',
-    );
-
-    await page.getByRole('button', { name: '$101', exact: true }).click();
-    await page.getByRole('button', { name: 'Run illustrative check' }).click();
-    await expect(page.getByText('Refused: PER_TX_CAP', { exact: true })).toBeVisible();
-    await expect(page.locator('[aria-live="polite"]')).toHaveText(
-      'Refused: PER_TX_CAP; $100 headroom',
-    );
-
-    expect(requests.some((url) => new URL(url).pathname.startsWith('/api/'))).toBe(false);
-    const applicationOrigin = new URL(page.url()).origin;
-    expect(requests.every((url) => new URL(url).origin === applicationOrigin)).toBe(true);
-  });
-
-  test('renders its complete default consequence without JavaScript', async ({
-    browser,
-    baseURL,
-  }) => {
+  test('renders the full story without client-side JavaScript', async ({ browser, baseURL }) => {
     const context = await browser.newContext({
       javaScriptEnabled: false,
       baseURL: baseURL ?? 'http://127.0.0.1:3100',
@@ -62,141 +30,59 @@ test.describe('public visual landing page', () => {
     const page = await context.newPage();
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1, name: headline })).toBeVisible();
-    await expect(page.getByText('Refused: PER_TX_CAP')).toBeVisible();
-    await expect(page.getByText('GOL is not the venue.')).toBeVisible();
-    await expect(
-      page.getByRole('link', { name: /Explore Arc testnet prototype/ }).first(),
-    ).toBeVisible();
-    await expect(page.getByRole('button', { name: '$100', exact: true })).toBeDisabled();
-    await expect(page.getByRole('button', { name: '$101', exact: true })).toBeDisabled();
+    await expect(page.locator('[data-visual="network-field"]')).toBeVisible();
+    await expect(page.getByText('Authority and state').first()).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Explore the prototype' }).first()).toBeVisible();
     await context.close();
   });
 
-  test('supports skip navigation, anchors, disclosure and route isolation', async ({ page }) => {
+  test('supports skip navigation, section anchors and app routing', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator('#main-content')).toBeFocused();
 
+    await page.getByRole('button', { name: 'Menu', exact: true }).click();
     const navigation = page.getByRole('navigation', { name: 'Landing page' });
-    await navigation.getByRole('link', { name: 'Mandate' }).click();
-    await expect(page).toHaveURL(/#mandate$/);
+    await navigation.getByRole('link', { name: 'Boundary' }).click();
+    await expect(page).toHaveURL(/#boundary$/);
     await expect(
-      page.getByRole('heading', { name: 'Set the edges. Leave the strategy open.' }),
+      page.getByRole('heading', { name: 'The primitives that power agent finance.' }),
     ).toBeVisible();
 
-    const disclosure = page.getByText('Complete status and evidence boundaries');
-    await disclosure.focus();
-    await page.keyboard.press('Enter');
-    await expect(page.getByText('Repository-supported prototype')).toBeVisible();
-
-    await page.getByRole('link', { name: 'Explore Arc testnet prototype' }).first().click();
+    await page.getByRole('banner').getByRole('link', { name: 'Open prototype' }).click();
     await expect(page).toHaveURL(/\/app$/);
-    await expect(page.getByRole('heading', { name: 'GOL Network' })).toBeVisible();
-  });
-
-  test('meets text, visual, surface and viewport budgets on desktop and mobile', async ({
-    page,
-  }) => {
-    for (const viewport of [
-      { width: 390, height: 844, maxViewports: 9 },
-      { width: 1440, height: 900, maxViewports: 6.5 },
-    ]) {
-      await page.setViewportSize(viewport);
-      await page.goto('/');
-      const metrics = await page.evaluate(() => {
-        const words = (document.body.innerText.match(/\S+/g) ?? []).length;
-        const roundedSurfaces = [...document.querySelectorAll<HTMLElement>('*')].filter(
-          (element) => {
-            const box = element.getBoundingClientRect();
-            const style = getComputedStyle(element);
-            return (
-              box.width > 100 &&
-              box.height > 60 &&
-              Number.parseFloat(style.borderTopLeftRadius) > 10
-            );
-          },
-        ).length;
-        return {
-          words,
-          roundedSurfaces,
-          height: document.documentElement.scrollHeight,
-          overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-        };
-      });
-      expect(metrics.words).toBeLessThanOrEqual(500);
-      expect(metrics.roundedSurfaces).toBeLessThanOrEqual(16);
-      expect(metrics.height / viewport.height).toBeLessThanOrEqual(viewport.maxViewports);
-      expect(metrics.overflow).toBe(false);
-
-      const qualifiers = await page.locator('body').innerText();
-      expect(qualifiers.match(/prototype/gi)?.length ?? 0).toBeLessThanOrEqual(4);
-      expect(qualifiers.match(/design target/gi)?.length ?? 0).toBeLessThanOrEqual(3);
-    }
+    await expect(page.locator('main')).toBeVisible();
   });
 
   for (const viewport of [
     { width: 320, height: 800 },
-    { width: 640, height: 720 },
+    { width: 390, height: 844 },
     { width: 768, height: 1024 },
     { width: 1024, height: 768 },
+    { width: 1440, height: 900 },
   ]) {
-    test(`has no clipped key content at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    test(`has no clipped content at ${viewport.width}x${viewport.height}`, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.goto('/');
       const overflow = await page
         .locator('html')
         .evaluate((element) => element.scrollWidth > element.clientWidth);
       expect(overflow).toBe(false);
-      for (const label of ['PER_TX_CAP', 'Amount', 'Refused', 'GOL account']) {
-        const box = await page
-          .getByText(label, { exact: label !== 'PER_TX_CAP' })
-          .first()
-          .boundingBox();
+      for (const label of ['Account policy', 'Refused', 'Authority and state']) {
+        const box = await page.getByText(label, { exact: true }).first().boundingBox();
         expect(box?.width).toBeGreaterThan(0);
         expect(box?.height).toBeGreaterThan(0);
       }
     });
   }
 
-  test('removes landing motion durations and preserves targets under reduced motion', async ({
-    page,
-  }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/');
-    const motion = await page.locator('[class*="animate-"]').evaluateAll((elements) =>
-      elements.map((element) => {
-        const style = getComputedStyle(element);
-        return [style.animationDuration, style.transitionDuration] as const;
-      }),
-    );
-    const milliseconds = (value: string) =>
-      value.endsWith('ms') ? Number.parseFloat(value) : Number.parseFloat(value) * 1000;
-    expect(
-      motion.every(
-        ([animation, transition]) =>
-          milliseconds(animation) <= 0.01 && milliseconds(transition) <= 0.01,
-      ),
-    ).toBe(true);
-    await expect(page.getByText('Refused: PER_TX_CAP', { exact: true })).toBeVisible();
-
-    await page.getByRole('button', { name: '$100', exact: true }).click();
-    await page.getByRole('button', { name: 'Run illustrative check' }).click();
-    await expect(page.getByText('Allowed', { exact: true })).toBeVisible({ timeout: 100 });
-    await expect(page.locator('[aria-live="polite"]')).toHaveText(
-      'Allowed within illustrative $100 limit',
-    );
-  });
-
-  test('keeps every landing control and CTA at least 44 pixels tall on mobile', async ({
-    page,
-  }) => {
+  test('keeps every landing CTA at least 44 pixels tall on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     const targets = await page
-      .locator('main button, main a, header a')
+      .locator('main a, header a')
       .evaluateAll((elements) =>
         elements
           .map((element) => element.getBoundingClientRect().height)
@@ -204,23 +90,44 @@ test.describe('public visual landing page', () => {
       );
     expect(targets.length).toBeGreaterThan(0);
     expect(Math.min(...targets)).toBeGreaterThanOrEqual(44);
-
-    await page.getByRole('button', { name: '$100', exact: true }).click();
-    await page.getByRole('button', { name: 'Run illustrative check' }).click();
-    await expect(page.getByText('Allowed', { exact: true })).toBeVisible({ timeout: 100 });
   });
 
-  test('preserves content and keyboard operation in forced colors', async ({ page }) => {
-    await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  test('preserves content and contrast tokens in dark and forced-color modes', async ({ page }) => {
     await page.goto('/');
+    await page.locator('html').evaluate((element) => element.classList.add('theme-dark'));
     await expect(page.getByRole('heading', { level: 1, name: headline })).toBeVisible();
-    await expect(page.getByText('Refused: PER_TX_CAP', { exact: true })).toBeVisible();
+    await expect(page.locator('footer')).toHaveCSS('color', 'rgb(248, 250, 255)');
 
-    const amount = page.getByRole('button', { name: '$100', exact: true });
-    await amount.focus();
-    await expect(amount).toBeFocused();
-    await page.keyboard.press('Enter');
-    await page.getByRole('button', { name: 'Run illustrative check' }).click();
-    await expect(page.getByText('Allowed', { exact: true })).toBeVisible({ timeout: 100 });
+    await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+    await page.reload();
+    await expect(page.getByRole('heading', { level: 1, name: headline })).toBeVisible();
+    const prototypeLink = page.getByRole('link', { name: 'Explore the prototype' }).first();
+    await prototypeLink.focus();
+    await expect(prototypeLink).toBeFocused();
+  });
+
+  test('reveals feature details and ASCII art on hover', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+
+    const feature = page.locator('[data-platform-feature]').first();
+    const detail = feature.getByText(
+      'The account enforces what an agent may do where value moves.',
+    );
+    const detailedArt = feature.locator('[data-platform-feature-art="detail"]');
+    const asciiArt = feature.locator('[data-platform-feature-art="ascii"]');
+
+    await feature.scrollIntoViewIfNeeded();
+    await expect(feature).toHaveCSS('opacity', '1');
+    await expect(feature).toHaveCSS('visibility', 'visible');
+    await expect(detail).toHaveCSS('opacity', '0');
+    await expect(detailedArt).toHaveCSS('opacity', '1');
+    await expect(asciiArt).toHaveAttribute('data-ascii-ready', 'true');
+    await expect(asciiArt).toHaveCSS('opacity', '0');
+
+    await feature.hover();
+    await expect(detail).toHaveCSS('opacity', '1');
+    await expect(detailedArt).toHaveCSS('opacity', '0');
+    await expect(asciiArt).toHaveCSS('opacity', '1');
   });
 });

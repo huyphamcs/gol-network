@@ -11,7 +11,7 @@ test('capture labeled fixture states', async ({ page }) => {
   await page.goto('/');
   await expect(
     page.getByRole('heading', {
-      name: 'Agents can act. Your limit still decides.',
+      name: 'One account. Every market.',
     }),
   ).toBeVisible();
   await page.screenshot({
