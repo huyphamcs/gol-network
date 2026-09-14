@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 const RECIPIENT = '0xbEef000000000000000000000000000000000004';
 
-async function completeFixtureSetup(page: Page) {
+async function provisionFixtureAgent(page: Page) {
   await page.getByRole('button', { name: /^Create payment account/ }).click();
   await expect(page.getByRole('heading', { name: 'Choose who GOL can pay' })).toBeVisible({
     timeout: 30_000,
@@ -15,6 +15,11 @@ async function completeFixtureSetup(page: Page) {
   await expect(page.getByRole('heading', { name: 'Add agent network fees' })).toBeVisible({
     timeout: 30_000,
   });
+  await expect(page.getByText('Awaiting your wallet signature', { exact: true })).toHaveCount(0);
+}
+
+async function completeFixtureSetup(page: Page) {
+  await provisionFixtureAgent(page);
 
   await page.getByRole('button', { name: /^Add 1 USDC fee reserve/ }).click();
   await page.getByRole('button', { name: /^Continue to wallet/ }).click();
@@ -58,6 +63,67 @@ test.describe('AG-UI agent workflow', () => {
     await expect(page.getByRole('heading', { name: 'Set up agent payments' })).toBeVisible();
     await expect(page.getByLabel('Message GOL Agent')).toHaveCount(0);
     await expect(page.getByRole('button', { name: /^Create payment account/ })).toBeVisible();
+  });
+
+  test('does not request a wallet signature while creating the payment agent', async ({ page }) => {
+    await provisionFixtureAgent(page);
+  });
+
+  test('restores agent messages and payment cards after a page reload', async ({ page }) => {
+    await completeFixtureSetup(page);
+    const threadId = 'fixture-persisted-thread';
+    const runId = 'fixture-persisted-run';
+    const callId = 'fixture-persisted-call';
+    const messageId = 'fixture-persisted-message';
+    const instruction = 'Pay 2 USDC to Design contractor';
+    const assistantText = 'The 2 USDC payment is ready for review. Nothing has been submitted.';
+    const events = [
+      { type: 'RUN_STARTED', threadId, runId },
+      {
+        type: 'TOOL_CALL_START',
+        toolCallId: callId,
+        toolCallName: 'preview_instruction',
+        parentMessageId: messageId,
+      },
+      { type: 'TOOL_CALL_ARGS', toolCallId: callId, delta: JSON.stringify({ instruction }) },
+      { type: 'TOOL_CALL_END', toolCallId: callId },
+      {
+        type: 'TOOL_CALL_RESULT',
+        messageId: `${messageId}-result`,
+        toolCallId: callId,
+        content: JSON.stringify({
+          source: 'gol',
+          kind: 'client_handoff',
+          tool: 'preview_instruction',
+          arguments: { instruction },
+        }),
+      },
+      { type: 'TEXT_MESSAGE_START', messageId, role: 'assistant' },
+      { type: 'TEXT_MESSAGE_CONTENT', messageId, delta: assistantText },
+      { type: 'TEXT_MESSAGE_END', messageId },
+      { type: 'RUN_FINISHED', threadId, runId },
+    ];
+    await page.route('**/api/agent/run', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/event-stream',
+        body: events.map((event) => `data: ${JSON.stringify(event)}\n\n`).join(''),
+      });
+    });
+
+    await page.getByLabel('Message GOL Agent').fill(instruction);
+    await page.getByRole('button', { name: 'Run agent', exact: true }).click();
+    await expect(page.getByText(assistantText, { exact: true })).toBeVisible();
+    await expect(page.getByTestId('instruction-preview')).toContainText('2 USDC');
+
+    await page.waitForTimeout(200);
+    await page.reload();
+    await page.getByRole('button', { name: 'Open fixture demo', exact: true }).click();
+    await completeFixtureSetup(page);
+
+    await expect(page.getByText(instruction, { exact: true })).toBeVisible();
+    await expect(page.getByText(assistantText, { exact: true })).toBeVisible();
+    await expect(page.getByText('GOL payment', { exact: true })).toBeVisible();
   });
 
   test('reviews and signs a prepared Aave transaction only after owner confirmation', async ({

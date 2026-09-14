@@ -76,7 +76,7 @@ export function serializeChatHistory(
 ): string {
   let storedMessages = messages
     .slice(-MAX_MESSAGES)
-    .map(parseMessage)
+    .map(parsePersistedMessage)
     .filter((message): message is PersistedChatMessage => message !== null)
     .map(markInterruptedRunsFailed);
   const safeThreadId = optionalText(threadId, MAX_IDENTIFIER_CHARACTERS) ?? null;
@@ -110,8 +110,26 @@ function stringify(
       ...(followups ? { followups } : {}),
     });
   } catch {
-    return JSON.stringify({ version: STORAGE_VERSION, threadId, messages: [] });
+    return JSON.stringify({
+      version: STORAGE_VERSION,
+      threadId,
+      messages: messages.map(({ result: _result, handoff: _handoff, ...message }) => message),
+      ...(followups ? { followups } : {}),
+    });
   }
+}
+
+function parsePersistedMessage(
+  value: PersistedChatMessage & { streaming?: boolean | undefined },
+): PersistedChatMessage | null {
+  const message = parseMessage(value);
+  if (!message || value.streaming !== true || message.role !== 'agent' || message.text) {
+    return message;
+  }
+  return {
+    ...message,
+    text: 'The agent response was interrupted by the page reload. Please try again.',
+  };
 }
 
 function parseFollowups(value: unknown): Record<string, string> | undefined {

@@ -18,7 +18,7 @@ export function Providers({ config, children }: { config: PublicConfig; children
     <PrivyProvider
       appId={config.privyAppId}
       config={{
-        loginMethods: ['email', 'google', 'passkey', 'wallet'],
+        loginMethods: ['email', 'google', 'wallet'],
         defaultChain: arcTestnet,
         supportedChains: [arcTestnet],
         embeddedWallets: { ethereum: { createOnLogin: 'users-without-wallets' } },

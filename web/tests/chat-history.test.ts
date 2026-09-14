@@ -48,6 +48,36 @@ describe('agent chat history', () => {
     ).toBe('failed');
   });
 
+  it('restores an explanation when reload interrupts an empty assistant response', () => {
+    const messages: Array<PersistedChatMessage & { streaming?: boolean }> = [
+      { id: 'user-1', role: 'user', text: 'Pay 2 USDC' },
+      { id: 'agent-1', role: 'agent', text: '', streaming: true },
+    ];
+
+    const restored = parseChatHistory(serializeChatHistory(messages, 'thread-1'));
+    expect(restored.messages).toHaveLength(2);
+    expect(restored.messages[1]?.text).toContain('interrupted by the page reload');
+  });
+
+  it('keeps chat text when a tool result cannot be serialized', () => {
+    const messages: PersistedChatMessage[] = [
+      { id: 'user-1', role: 'user', text: 'Show my position' },
+      {
+        id: 'agent-1',
+        role: 'agent',
+        text: 'Your position is ready.',
+        result: { unsafeInteger: 1n },
+      },
+    ];
+
+    const restored = parseChatHistory(serializeChatHistory(messages, 'thread-1'));
+    expect(restored.messages.map((message) => message.text)).toEqual([
+      'Show my position',
+      'Your position is ready.',
+    ]);
+    expect(restored.messages[1]?.result).toBeUndefined();
+  });
+
   it('restores completed agent outcome explanations after reload', () => {
     const serialized = serializeChatHistory([], 'thread-1', {
       payment: 'The payment was refused because it exceeded the per-payment limit.',

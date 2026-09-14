@@ -3,18 +3,18 @@
   "chainId": 5042002,
   "network": "arc-testnet",
   "usdc": "0x3600000000000000000000000000000000000000",
-  "factory": "0x0C057bE9Ea60Ee0dc9b617600Eb6a688fC9Cf789",
+  "factory": "0x229db99428ae031819cF6acF3c056588c4283B2F",
   "account": null,
-  "deploymentBlock": 61179889,
-  "deploymentTransaction": "0xf6504c625ed208cd7bc2ea244c3eaab8bf651485d75b7db7d6ed9e1dc7641685",
+  "deploymentBlock": 61883600,
+  "deploymentTransaction": "0x4ddb59a2ce2d9e6a2d358593462f301be1d844175148888798fdb579d0baf7fc",
   "compiler": "0.8.26",
   "optimizer": {
     "enabled": true,
     "runs": 200
   },
   "evmVersion": "paris",
-  "sourceCommit": "f1f9e7b4586b834325ab834a0e8fe137c9a4c649",
-  "bytecodeHash": "0x82c5376287521aa611e7f583a23cc8f85e891600534d33b9e4c51d78ab21b46d",
+  "sourceCommit": "62076310bb3efb7b75be15add5ed3bff26a8cfd1",
+  "bytecodeHash": "0x97ba888934fbb0f7ad0b79503cbffe1869cb57764ad88335cf01558280e6cc76",
   "abiHash": "0x34996f274c68002fde4c9a782b02747006b25e05898efc4a50f2311af8ba45f6",
-  "verificationUrl": "https://testnet.arcscan.app/address/0x0C057bE9Ea60Ee0dc9b617600Eb6a688fC9Cf789"
+  "verificationUrl": "https://testnet.arcscan.app/address/0x229db99428ae031819cF6acF3c056588c4283B2F"
 }

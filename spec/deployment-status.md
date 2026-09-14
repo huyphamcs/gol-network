@@ -144,42 +144,46 @@ Evidence:
 
 Evidence:
 
-- Factory address: `0x0C057bE9Ea60Ee0dc9b617600Eb6a688fC9Cf789`
+- Factory address: `0x229db99428ae031819cF6acF3c056588c4283B2F`
 - Account address: pending creation by the actual owner wallet
 - Deployment transaction and block:
-  `0xf6504c625ed208cd7bc2ea244c3eaab8bf651485d75b7db7d6ed9e1dc7641685`, block
-  `61179889`
+  `0x4ddb59a2ce2d9e6a2d358593462f301be1d844175148888798fdb579d0baf7fc`, block
+  `61883600`
 - Verification URL:
-  https://testnet.arcscan.app/address/0x0C057bE9Ea60Ee0dc9b617600Eb6a688fC9Cf789
-- Source commit: `f1f9e7b4586b834325ab834a0e8fe137c9a4c649`
-- Bytecode hash: `0x82c5376287521aa611e7f583a23cc8f85e891600534d33b9e4c51d78ab21b46d`
+  https://testnet.arcscan.app/address/0x229db99428ae031819cF6acF3c056588c4283B2F
+- Source commit: `62076310bb3efb7b75be15add5ed3bff26a8cfd1`
+- Bytecode hash: `0x97ba888934fbb0f7ad0b79503cbffe1869cb57764ad88335cf01558280e6cc76`
 - ABI hash: `0x34996f274c68002fde4c9a782b02747006b25e05898efc4a50f2311af8ba45f6`
-- Contract validation: 20 Foundry tests passed; `forge fmt --check` passed
+- Contract validation: 19 Foundry tests passed; `forge fmt --check` passed
 
 ## 4. Subgraph deployment
 
 - [x] Run `pnpm subgraph:prepare` from the completed Arc deployment manifest.
 - [x] Review the generated network, factory address, and start block.
 - [x] Run subgraph code generation, tests, and build.
-- [x] Deploy the subgraph through Graph Studio and record its deployment ID and query endpoint.
-- [x] Confirm `_meta` health and that indexing reaches the factory deployment block.
+- [ ] Deploy a new subgraph version through Graph Studio and record its deployment ID and query
+      endpoint.
+- [ ] Confirm `_meta` health and that the new version indexes from the replacement factory block.
 
 Evidence:
 
 - Prepared manifest: network `arc-testnet`, factory
-  `0x0C057bE9Ea60Ee0dc9b617600Eb6a688fC9Cf789`, `startBlock: 61179889` (matches
+  `0x229db99428ae031819cF6acF3c056588c4283B2F`, `startBlock: 61883600` (matches
   `deployments/arc-testnet.json` deployment block).
 - Build/test: `graph codegen` and `graph build` clean on `@graphprotocol/graph-cli`
   0.98.1 / Node 22; `graph test` 3/3 matchstick assertions pass.
-- Deployment ID (IPFS manifest CID): `QmYuyvng3hazXSfj3MWnFi2arm6RCJu4FD2nstF52xSYT9`,
-  version label `0.0.1`.
-- Query endpoint, without API key:
+- Prepared build: `graph codegen`, `graph test` (3/3), and `graph build` pass for the
+  replacement factory.
+- Currently deployed legacy version: deployment ID
+  `QmYuyvng3hazXSfj3MWnFi2arm6RCJu4FD2nstF52xSYT9`, version label `0.0.1`.
+- Current legacy query endpoint, without API key:
   `https://api.studio.thegraph.com/query/1758918/gol/0.0.1`
-- `_meta` health: `hasIndexingErrors: false`; deployment hash matches the CID above;
+- Legacy `_meta` health: `hasIndexingErrors: false`; deployment hash matches the CID above;
   indexed head past block `61202900`, i.e. synced beyond the factory deployment block
   `61179889`.
-- Initial indexed block: `61179889` (subgraph start block; no `Account`/`Mandate`/
-  `Action` entities yet — the demonstration `GolAccount` has not been created).
+- Replacement deployment remains pending because the Graph Studio deploy credential is not
+  available on this machine. Until it is deployed, the current endpoint does not index accounts
+  created by factory `0x229db99428ae031819cF6acF3c056588c4283B2F`.
 
 ## 5. Application deployment
 

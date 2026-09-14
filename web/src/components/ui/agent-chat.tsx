@@ -571,12 +571,14 @@ export function AgentChat(props: AgentChatProps) {
   const abortRef = useRef<AbortController | null>(null);
   const followupControllersRef = useRef(new Set<AbortController>());
   const messagesRef = useRef(messages);
+  const outcomeFollowupsRef = useRef(outcomeFollowups);
   const historyScope = props.ownerAddress?.toLowerCase() ?? null;
   const historyReady = hydratedHistoryScope === historyScope;
   const lastTransactionRef = useRef<string | null>(null);
   const lastPaymentRef = useRef<string | null>(null);
   const lastAnswerRef = useRef<string | null>(null);
   messagesRef.current = messages;
+  outcomeFollowupsRef.current = outcomeFollowups;
 
   useEffect(() => {
     setHydratedHistoryScope(undefined);
@@ -605,21 +607,26 @@ export function AgentChat(props: AgentChatProps) {
 
   useEffect(() => {
     if (!historyScope || hydratedHistoryScope !== historyScope) return;
-    const timeout = window.setTimeout(() => {
+    const persistHistory = () => {
       try {
         window.localStorage.setItem(
           chatHistoryStorageKey(historyScope),
           serializeChatHistory(
-            messages,
+            messagesRef.current,
             threadIdRef.current,
-            persistableOutcomeFollowups(outcomeFollowups),
+            persistableOutcomeFollowups(outcomeFollowupsRef.current),
           ),
         );
       } catch {
         // Chat remains usable when browser storage is disabled or full.
       }
-    }, 150);
-    return () => window.clearTimeout(timeout);
+    };
+    const timeout = window.setTimeout(persistHistory, 150);
+    window.addEventListener('pagehide', persistHistory);
+    return () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener('pagehide', persistHistory);
+    };
   }, [historyScope, hydratedHistoryScope, messages, outcomeFollowups]);
 
   useEffect(() => {
@@ -879,6 +886,9 @@ export function AgentChat(props: AgentChatProps) {
     showPaymentStatus && props.payment && !['idle', 'parsing'].includes(props.payment.stage)
       ? props.payment
       : null;
+  const latestPaymentMessageId = [...messages]
+    .reverse()
+    .find((message) => message.handoff?.tool === 'preview_instruction')?.id;
 
   const clearConversation = () => {
     abortRef.current?.abort('conversation cleared');
@@ -953,16 +963,15 @@ export function AgentChat(props: AgentChatProps) {
           </div>
         )}
         {historyReady &&
-          messages
-            .filter(
-              (message) =>
-                !(
-                  message.handoff?.tool === 'preview_instruction' &&
-                  liveStage &&
-                  PAYMENT_STAGES[liveStage.stage].terminal
-                ),
-            )
-            .map((message) => (
+          messages.map((message) => {
+            const handoffTool = message.handoff?.tool;
+            const isCurrentPaymentMessage =
+              handoffTool === 'preview_instruction' && message.id === latestPaymentMessageId;
+            const visibleAction =
+              message.action && (!isCurrentPaymentMessage || (!props.preview && liveStage === null))
+                ? message.action
+                : null;
+            return (
               <div
                 key={message.id}
                 className={cn('flex items-start gap-3', message.role === 'user' && 'justify-end')}
@@ -1030,16 +1039,25 @@ export function AgentChat(props: AgentChatProps) {
                       ) : null}
                     </>
                   )}
-                  {message.action && message.handoff?.tool !== 'preview_instruction' && (
+                  {visibleAction && (
                     <ProtocolActionCard
-                      action={message.action}
+                      action={visibleAction}
                       onReview={() => {
                         if (message.source === 'aave' && message.result !== undefined) {
                           props.onAaveReview(message.result, message.action!);
                           return;
                         }
                         const handoffTool = message.handoff?.tool;
-                        const handoffArguments = message.handoff?.arguments;
+                        const handoffArguments =
+                          message.handoff?.arguments &&
+                          typeof message.handoff.arguments === 'object'
+                            ? (message.handoff.arguments as Record<string, unknown>)
+                            : undefined;
+                        if (handoffTool === 'preview_instruction') {
+                          const requested = handoffArguments?.instruction;
+                          if (typeof requested === 'string') props.onMandatePrompt(requested);
+                          return;
+                        }
                         if (
                           typeof handoffTool === 'string' &&
                           handoffTool !== 'preview_instruction'
@@ -1058,7 +1076,8 @@ export function AgentChat(props: AgentChatProps) {
                   )}
                 </div>
               </div>
-            ))}
+            );
+          })}
 
         {props.preview && (
           <Card
@@ -1164,6 +1183,9 @@ export function AgentChat(props: AgentChatProps) {
             ) : null}
           </>
         )}
+        {!liveStage && outcomeFollowups.payment ? (
+          <AgentOutcomeMessage followup={outcomeFollowups.payment} />
+        ) : null}
         {props.answer && (
           <>
             <Card data-testid="grounded-answer" className="ml-10 bg-muted shadow-none">
@@ -1201,6 +1223,9 @@ export function AgentChat(props: AgentChatProps) {
             ) : null}
           </>
         )}
+        {!props.answer && outcomeFollowups.answer ? (
+          <AgentOutcomeMessage followup={outcomeFollowups.answer} />
+        ) : null}
         {outcomeFollowups.owner ? <AgentOutcomeMessage followup={outcomeFollowups.owner} /> : null}
         {sending && (
           <div className="ml-10 flex items-center gap-2 text-xs text-muted-foreground">

@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  useConnectWallet,
   useExportWallet,
   useLinkAccount,
   useLogin,
@@ -22,6 +23,7 @@ import type { PublicConfig } from '@/config';
 import { createFixtureBackend } from '@/client/fixture-backend';
 import { createLiveBackend } from '@/client/live-backend';
 import { createBotanaryMoneyClient } from '@/client/botanary-money';
+import { shouldShowAccountLoading } from '@/client/account-loading';
 import type { PreparedAaveTransaction } from '@/client/aave-transactions';
 import { errorCodeCopy, isTerminalStage, stageFromJournal } from '@/client/stages';
 import {
@@ -78,6 +80,10 @@ function PrivyGolApp({ config, forceLoading }: { config: PublicConfig; forceLoad
     },
   });
   const { wallets, ready: walletsReady } = useWallets();
+  const { connectWallet } = useConnectWallet({
+    onSuccess: () => setWalletActionError(null),
+    onError: () => setWalletActionError('Could not reconnect your wallet. Please try again.'),
+  });
   const { exportWallet } = useExportWallet();
   const { linkWallet } = useLinkAccount({
     onSuccess: () => setWalletActionError(null),
@@ -198,6 +204,10 @@ function PrivyGolApp({ config, forceLoading }: { config: PublicConfig; forceLoad
     linkWallet: () => {
       setWalletActionError(null);
       linkWallet();
+    },
+    connectWallet: () => {
+      setWalletActionError(null);
+      connectWallet();
     },
     exportWallet: async (address) => exportWallet({ address }),
   };
@@ -566,13 +576,21 @@ function GolExperience({
   );
 
   const runOwnerAction = useCallback(
-    async (kind: OwnerActionKind, work: (reporter: ReturnType<typeof report>) => Promise<void>) => {
+    async (
+      kind: OwnerActionKind,
+      work: (reporter: ReturnType<typeof report>) => Promise<void>,
+      requiresWalletSignature = true,
+    ) => {
       if (busy) return false;
       const before = accountRef.current;
       let refreshed = false;
       let converged = false;
       setBusy(kind);
-      setTx({ kind, phase: 'awaiting_signature', hash: null, detail: '' });
+      setTx(
+        requiresWalletSignature
+          ? { kind, phase: 'awaiting_signature', hash: null, detail: '' }
+          : { kind: null, phase: 'idle', hash: null, detail: '' },
+      );
       try {
         await work(report(kind));
         for (const delay of [0, 300, 900, 1_800]) {
@@ -587,7 +605,10 @@ function GolExperience({
       } catch (error) {
         setTx((current) => ({
           kind,
-          phase: current.phase === 'awaiting_signature' ? 'failed' : current.phase,
+          phase:
+            current.phase === 'idle' || current.phase === 'awaiting_signature'
+              ? 'failed'
+              : current.phase,
           hash: current.hash,
           detail: message(error),
         }));
@@ -654,14 +675,18 @@ function GolExperience({
       return;
     }
     setConsentOpen(false);
-    await runOwnerAction('provision_agent', async () => {
-      await backend.provisionAgent(
-        current.accountAddress!,
-        current.ownerAddress,
-        recipientMode,
-        recipientMode === 'allowlist' ? recipients : [],
-      );
-    });
+    await runOwnerAction(
+      'provision_agent',
+      async () => {
+        await backend.provisionAgent(
+          current.accountAddress!,
+          current.ownerAddress,
+          recipientMode,
+          recipientMode === 'allowlist' ? recipients : [],
+        );
+      },
+      false,
+    );
     setRecipientDrafts([{ label: '', address: '' }]);
   }
 
@@ -920,7 +945,11 @@ function GolExperience({
     config,
     auth,
     account,
-    accountLoading: forceLoading || (auth.authenticated && !accountLoaded),
+    accountLoading: shouldShowAccountLoading({
+      forceLoading,
+      accountEnabled: enabled,
+      accountLoaded,
+    }),
     accountError,
     steps,
     tx,

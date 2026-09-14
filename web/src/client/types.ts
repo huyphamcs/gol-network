@@ -287,6 +287,8 @@ export interface AuthState {
   }>;
   /** Opens Privy's authenticated wallet-link flow. Unavailable in fixture mode. */
   linkWallet?: () => void;
+  /** Reconnects an external wallet when the Privy session remains authenticated. */
+  connectWallet?: () => void;
   /** Opens Privy's isolated export flow for the owner embedded wallet. */
   exportWallet?: (address: string) => Promise<void>;
 }

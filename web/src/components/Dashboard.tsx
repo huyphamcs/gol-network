@@ -21,7 +21,6 @@ import {
   Gauge,
   GitBranch,
   HandCoins,
-  KeyRound,
   LoaderCircle,
   Mail,
   Moon,
@@ -270,6 +269,10 @@ export function Dashboard(props: DashboardProps) {
         ownerAddress={props.auth.ownerAddress ?? null}
       />
     );
+  }
+
+  if (props.auth.mode === 'live' && !props.auth.ownerAddress) {
+    return <WalletConnectionGate auth={props.auth} theme={theme} onThemeChange={selectTheme} />;
   }
 
   const nextSetupStep = nextIncompleteStep(props.steps);
@@ -761,6 +764,73 @@ export function Dashboard(props: DashboardProps) {
         onSend={props.onExecuteMoneySend}
         onReceive={props.onGetMoneyReceiveInfo}
       />
+    </main>
+  );
+}
+
+function WalletConnectionGate({
+  auth,
+  theme,
+  onThemeChange,
+}: Pick<DashboardProps, 'auth'> & {
+  theme: ThemeMode;
+  onThemeChange: (theme: ThemeMode) => void;
+}) {
+  return (
+    <main
+      className={`theme-${theme} relative grid min-h-screen max-w-none place-items-center overflow-y-auto bg-background px-5 py-20 text-foreground transition-colors sm:px-8`}
+    >
+      <DitherBackground theme={theme} />
+
+      <div className="absolute right-5 top-5 z-10 sm:right-8 sm:top-8">
+        <ThemeSwitch theme={theme} onChange={onThemeChange} compact />
+      </div>
+
+      <section className="relative z-10 w-full max-w-lg">
+        <Card className="w-full bg-card/95 shadow-panel backdrop-blur-sm">
+          <CardContent className="px-6 py-8 text-center sm:px-12 sm:py-12">
+            <img className="mx-auto size-16" src="/gol-mark-blue.svg" alt="GOL" />
+            <h1 className="font-pixel-wordmark mt-5 text-2xl sm:text-3xl">GOL Network</h1>
+            <h2 className="mt-7 text-xl font-semibold">Reconnect your wallet</h2>
+            <p className="mt-2 text-sm leading-copy text-muted-foreground">
+              Your sign-in session is still active, but its owner wallet is no longer connected to
+              this browser.
+            </p>
+
+            <div className="mt-7 grid gap-3">
+              <Button
+                type="button"
+                size="lg"
+                className="h-14 w-full rounded-full"
+                onClick={() => auth.connectWallet?.()}
+                disabled={!auth.connectWallet}
+              >
+                <Wallet className="size-4" aria-hidden />
+                Reconnect wallet
+              </Button>
+              <Button
+                type="button"
+                size="lg"
+                variant="outline"
+                className="h-14 w-full rounded-full"
+                onClick={() => auth.logout()}
+              >
+                Sign out
+              </Button>
+            </div>
+
+            {auth.walletActionError ? (
+              <Alert variant="destructive" className="mt-5 text-left">
+                <CircleAlert className="size-4" aria-hidden />
+                <div>
+                  <AlertTitle>Wallet connection failed</AlertTitle>
+                  <AlertDescription>{auth.walletActionError}</AlertDescription>
+                </div>
+              </Alert>
+            ) : null}
+          </CardContent>
+        </Card>
+      </section>
     </main>
   );
 }
@@ -1613,26 +1683,15 @@ function SignInGate({
                 <SiGoogle aria-hidden className="size-4" />
                 Continue with Google
               </Button>
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-12 rounded-full"
-                  onClick={() => auth.login('passkey')}
-                  disabled={!authConfigured || !auth.ready}
-                >
-                  <KeyRound size={16} /> Passkey
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-12 rounded-full"
-                  onClick={() => auth.login('wallet')}
-                  disabled={!authConfigured || !auth.ready}
-                >
-                  <Wallet size={16} /> Wallet
-                </Button>
-              </div>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-12 w-full rounded-full"
+                onClick={() => auth.login('wallet')}
+                disabled={!authConfigured || !auth.ready}
+              >
+                <Wallet size={16} /> Wallet
+              </Button>
             </div>
 
             {auth.error ? (
@@ -1652,8 +1711,8 @@ function SignInGate({
                   <div>
                     <AlertTitle>Authentication is not configured</AlertTitle>
                     <AlertDescription>
-                      Add the Privy environment variables and restart the app to use Google,
-                      passkey, email, or wallet sign-in.
+                      Add the Privy environment variables and restart the app to use Google, email,
+                      or wallet sign-in.
                     </AlertDescription>
                   </div>
                 </Alert>
@@ -3188,7 +3247,10 @@ function TransactionToast({
   const title = transactionStatusTitle(tx);
 
   useEffect(() => {
-    if (!title || tx.kind === null) return;
+    if (!title || tx.kind === null) {
+      toast.dismiss('owner-transaction');
+      return;
+    }
 
     const options = {
       id: 'owner-transaction',

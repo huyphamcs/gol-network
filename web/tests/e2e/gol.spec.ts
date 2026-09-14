@@ -15,6 +15,14 @@ async function completeStep(page: Page, name: RegExp) {
 test.describe('mocked provider walkthrough', () => {
   test.setTimeout(180_000);
 
+  test('hides the passkey sign-in option', async ({ page }) => {
+    await page.goto('/app');
+
+    await expect(page.getByRole('heading', { name: 'GOL Network' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Passkey', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Wallet', exact: true })).toBeVisible();
+  });
+
   test('switches and persists the visual theme', async ({ page }) => {
     await page.addInitScript(() => {
       if (!window.localStorage.getItem('gol-theme'))
@@ -162,7 +170,6 @@ test.describe('mocked provider walkthrough', () => {
     await expect(page.getByRole('heading', { name: 'GOL Network' })).toBeVisible();
     await expect(page.getByText('FIXTURE MODE', { exact: true })).not.toBeVisible();
 
-    await expect(page.getByRole('button', { name: 'Passkey', exact: true })).toBeDisabled();
     await page.getByRole('button', { name: 'Open fixture demo', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Set up agent payments' })).toBeVisible();
     await page.getByRole('button', { name: 'Open wallet' }).click();

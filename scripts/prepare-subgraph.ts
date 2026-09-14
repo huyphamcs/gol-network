@@ -51,11 +51,21 @@ function resolveDeployment(): { factory: string; startBlock: number; source: str
 }
 
 function applyManifest(text: string): string {
+  let inFactoryDataSource = false;
   let inSource = false;
   let replacedAddress = false;
   let replacedBlock = false;
   const lines = text.split('\n').map((line) => {
-    if (/^\s{4}source:\s*$/.test(line)) {
+    if (/^\s{2}- kind:\s*/.test(line)) {
+      inFactoryDataSource = false;
+      inSource = false;
+      return line;
+    }
+    if (/^\s{4}name:\s*GolAccountFactory\s*$/.test(line)) {
+      inFactoryDataSource = true;
+      return line;
+    }
+    if (inFactoryDataSource && /^\s{4}source:\s*$/.test(line)) {
       inSource = true;
       return line;
     }
@@ -71,7 +81,9 @@ function applyManifest(text: string): string {
     }
     return line;
   });
-  if (!replacedAddress || !replacedBlock) fail('subgraph.yaml has no factory source to update');
+  if (!replacedAddress || !replacedBlock) {
+    fail('subgraph.yaml has no GolAccountFactory source to update');
+  }
   return lines.join('\n');
 }
 
