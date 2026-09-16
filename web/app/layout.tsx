@@ -31,8 +31,8 @@ export const metadata: Metadata = {
     shortcut: '/gol-mark-blue.svg',
   },
   title: {
-    default: 'Gol | One account. Every market.',
-    template: '%s | Gol',
+    default: 'Gol Network | One account. Every market.',
+    template: '%s | Gol Network',
   },
   description:
     'One account where AI agents can act across markets inside owner-defined limits, with a record of every refused action.',

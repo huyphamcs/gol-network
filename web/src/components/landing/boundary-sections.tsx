@@ -1,28 +1,29 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  ArrowRight,
-  Bot,
-  Braces,
-  FileCheck2,
-  Layers3,
-  Network,
-  Route,
-  ScrollText,
-  ShieldCheck,
-  UserRound,
-} from 'lucide-react';
+import { ArrowRight, Bot, Network, UserRound } from 'lucide-react';
+import { AsciiText } from '@/components/ui/ascii-text';
+import { BentoGridShowcase } from '@/components/ui/bento-product-features';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AsciiImage } from '@/components/ui/ascii-image';
+import { DotPattern } from '@/components/ui/dot-pattern';
 import { authorityRoles, completeStack, landingCopy, platformFeatures } from '@/content/landing';
-import { SubstrateStrip } from './insight-sections';
-import { Eyebrow, LandingSection, SectionHeading, SquareBullet } from './landing-primitives';
+import { Eyebrow, LandingSection, SectionHeading } from './landing-primitives';
+import { StackFeatureCard } from './stack-feature-card';
 
 const roleIcons = [UserRound, Bot, Network] as const;
-const stackIcons = [UserRound, ShieldCheck, FileCheck2, ScrollText, Route, Layers3] as const;
-
 export function BoundarySections() {
+  const stackCards = completeStack.map((item, index) => (
+    <StackFeatureCard
+      key={item.title}
+      title={item.title}
+      detail={item.detail}
+      image={item.image}
+      label={item.label}
+      layout={index === 0 ? 'tall' : index === 5 ? 'wide' : 'compact'}
+    />
+  ));
+
   return (
     <>
       <LandingSection id="boundary" labelledBy="primitives-title" className="p-0 lg:p-0">
@@ -33,7 +34,7 @@ export function BoundarySections() {
               id="primitives-title"
               className="mt-4 text-3xl leading-tight font-semibold tracking-tight sm:text-5xl"
             >
-              The primitives that power agent finance.
+              <AsciiText>The primitives that power agent finance.</AsciiText>
             </h2>
             <p className="mt-5 max-w-xl leading-copy text-muted-foreground">
               Secure, coordinated and verifiable infrastructure behind one owner-controlled account.
@@ -65,9 +66,8 @@ export function BoundarySections() {
                           {role.eyebrow}
                         </p>
                         <h3 className="mt-2 text-lg font-semibold">{role.title}</h3>
-                        <p className="mt-2 flex gap-3 text-sm leading-copy text-muted-foreground">
-                          <SquareBullet />
-                          <span>{role.detail}</span>
+                        <p className="mt-2 text-sm leading-copy text-muted-foreground">
+                          {role.detail}
                         </p>
                       </div>
                     </CardContent>
@@ -95,6 +95,7 @@ export function BoundarySections() {
               className="group flex min-h-128 flex-col overflow-hidden rounded-lg shadow-none outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20"
             >
               <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-muted p-6">
+                <DotPattern width={20} height={20} fade className="text-primary/20" />
                 <Image
                   src={feature.image}
                   alt=""
@@ -126,40 +127,22 @@ export function BoundarySections() {
         </div>
       </LandingSection>
 
-      <SubstrateStrip />
-
       <LandingSection labelledBy="stack-title">
         <SectionHeading
           id="stack-title"
           eyebrow="The complete stack"
           title="Everything an agent needs, already in one place."
-          copy="From accounts to execution, Gol organizes the complete infrastructure around one authority model."
+          copy="From accounts to execution, Gol Network organizes the complete infrastructure around one authority model."
         />
-        <div data-motion-list className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {completeStack.map((item, index) => {
-            const Icon = stackIcons[index] ?? Braces;
-            return (
-              <Card key={item.title} className="min-h-60 rounded-lg shadow-none">
-                <CardContent className="p-6">
-                  <span className="flex size-11 items-center justify-center rounded-lg bg-accent">
-                    <Icon aria-hidden="true" className="size-6 text-primary" />
-                  </span>
-                  <p className="mt-8 font-mono text-xs text-primary">
-                    {index === 1
-                      ? 'Account policy'
-                      : index === 2
-                        ? 'Refused'
-                        : index === 5
-                          ? 'Authority and state'
-                          : `0${index + 1}`}
-                  </p>
-                  <h3 className="mt-2 text-xl font-semibold">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-copy text-muted-foreground">{item.detail}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <BentoGridShowcase
+          className="mt-12"
+          integration={stackCards[0]}
+          trackers={stackCards[1]}
+          statistic={stackCards[2]}
+          focus={stackCards[3]}
+          productivity={stackCards[4]}
+          shortcuts={stackCards[5]}
+        />
       </LandingSection>
 
       <LandingSection labelledBy="boundary-title" className="p-0 lg:p-0">
@@ -170,8 +153,10 @@ export function BoundarySections() {
               id="boundary-title"
               className="mt-4 text-3xl leading-tight font-semibold tracking-tight sm:text-5xl"
             >
-              A limit only matters if it survives compromise.
-              <span className="mt-2 block text-primary">We make safe execution seamless.</span>
+              <AsciiText>A limit only matters if it survives compromise.</AsciiText>
+              <span className="mt-2 block text-primary">
+                <AsciiText delay={120}>We make safe execution seamless.</AsciiText>
+              </span>
             </h2>
             <Button asChild size="lg" className="mt-8">
               <Link href="/app">
@@ -185,10 +170,8 @@ export function BoundarySections() {
               <p className="font-mono text-xs font-semibold tracking-widest text-primary uppercase">
                 For owners
               </p>
-              <p className="mt-4 flex gap-3 font-semibold">
-                <SquareBullet /> Faster access inside a binding boundary
-              </p>
-              <p className="mt-2 pl-5 text-sm leading-copy text-muted-foreground">
+              <p className="mt-4 font-semibold">Faster access inside a binding boundary</p>
+              <p className="mt-2 text-sm leading-copy text-muted-foreground">
                 Move from intent to execution while the owner remains in control.
               </p>
             </div>
@@ -196,10 +179,8 @@ export function BoundarySections() {
               <p className="font-mono text-xs font-semibold tracking-widest text-primary uppercase">
                 For builders
               </p>
-              <p className="mt-4 flex gap-3 font-semibold">
-                <SquareBullet /> One integration, many market adapters
-              </p>
-              <p className="mt-2 pl-5 text-sm leading-copy text-muted-foreground">
+              <p className="mt-4 font-semibold">One integration, many market adapters</p>
+              <p className="mt-2 text-sm leading-copy text-muted-foreground">
                 Deploy agent workflows without moving policy into your server.
               </p>
             </div>

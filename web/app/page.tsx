@@ -7,15 +7,15 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
-    siteName: 'Gol',
+    siteName: 'Gol Network',
     url: '/',
-    title: 'Gol | One account. Every market.',
+    title: 'Gol Network | One account. Every market.',
     description:
       'An agent that can act inside limits you set, with a record of everything it was refused.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Gol | One account. Every market.',
+    title: 'Gol Network | One account. Every market.',
     description:
       'An agent that can act inside limits you set, with a record of everything it was refused.',
   },

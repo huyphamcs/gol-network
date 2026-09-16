@@ -1,42 +1,13 @@
 import Image from 'next/image';
-import { ArrowRight, Globe2, Link2, Network, ShieldCheck, Users } from 'lucide-react';
-import { insightCards, substrateComponents } from '@/content/landing';
+import { ArrowRight } from 'lucide-react';
+import { insightCards } from '@/content/landing';
 import { LandingSection, SectionHeading } from './landing-primitives';
-
-const substrateIcons = [ShieldCheck, Network, Link2, Users, Globe2] as const;
-
-export function SubstrateStrip() {
-  return (
-    <LandingSection className="py-14 lg:py-16" labelledBy="substrate-title">
-      <p className="font-mono text-xs font-semibold tracking-widest text-primary uppercase">
-        Existing substrate
-      </p>
-      <h2 id="substrate-title" className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-        Built from systems already in motion.
-      </h2>
-      <ul
-        data-motion-list
-        className="mt-10 grid gap-y-6 border-y border-border py-7 sm:grid-cols-3 lg:grid-cols-5"
-      >
-        {substrateComponents.map((item, index) => {
-          const Icon = substrateIcons[index] ?? Network;
-          return (
-            <li key={item} className="flex items-center gap-3 sm:px-4 sm:first:pl-0">
-              <Icon aria-hidden="true" className="size-5 shrink-0 text-primary" />
-              <span className="text-sm font-semibold">{item}</span>
-            </li>
-          );
-        })}
-      </ul>
-    </LandingSection>
-  );
-}
 
 export function InsightSections() {
   return (
     <>
       <LandingSection id="insights" labelledBy="insights-title">
-        <SectionHeading eyebrow="Insights" title="Latest from Gol." id="insights-title" />
+        <SectionHeading eyebrow="Insights" title="Latest from Gol Network." id="insights-title" />
         <div data-motion-list className="mt-12 grid gap-6 lg:grid-cols-3">
           {insightCards.map((item) => (
             <article key={item.title}>

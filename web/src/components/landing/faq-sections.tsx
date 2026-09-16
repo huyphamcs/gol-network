@@ -3,9 +3,9 @@ import { LandingSection } from './landing-primitives';
 
 const questions = [
   {
-    question: 'What is Gol?',
+    question: 'What is Gol Network?',
     answer:
-      'Gol is a design target for one owner-controlled account where agents can act across markets inside explicit limits, with every refusal and outcome recorded.',
+      'Gol Network is a design target for one owner-controlled account where agents can act across markets inside explicit limits, with every refusal and outcome recorded.',
   },
   {
     question: 'Who controls the account?',
@@ -30,7 +30,7 @@ const questions = [
   {
     question: 'What can I try today?',
     answer:
-      'Open the prototype to create a bounded request, inspect the owner and agent lanes, and see the refusal path when an action exceeds its mandate.',
+      'Launch the app to create a bounded request, inspect the owner and agent lanes, and see the refusal path when an action exceeds its mandate.',
   },
 ] as const;
 

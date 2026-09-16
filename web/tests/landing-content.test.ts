@@ -110,9 +110,27 @@ describe('landing content boundaries', () => {
     ].join('\n');
     expect(sources).not.toMatch(/@\/server|@\/client|@\/wallet/);
     expect(sources).not.toMatch(
-      /@privy|\bviem\b|@gol\/agent|@gol\/protocol|@react-three|\bthree\b|framer-motion/,
+      /@privy|\bviem\b|@gol\/agent|@gol\/protocol|@react-three|\bthree\b/,
     );
-    expect(sources.match(/['\"]use client['\"]/g)).toHaveLength(3);
+    const clientComponents = readdirSync(componentDirectory)
+      .filter((file) => file.endsWith('.tsx'))
+      .filter((file) =>
+        /['\"]use client['\"]/.test(readFileSync(join(componentDirectory, file), 'utf8')),
+      )
+      .sort();
+    expect(clientComponents).toEqual([
+      'builder-terminal-section.tsx',
+      'landing-header.tsx',
+      'landing-motion.tsx',
+      'partner-network-map.tsx',
+    ]);
+    const motionComponents = readdirSync(componentDirectory)
+      .filter((file) => file.endsWith('.tsx'))
+      .filter((file) =>
+        /from ['\"]framer-motion['\"]/.test(readFileSync(join(componentDirectory, file), 'utf8')),
+      )
+      .sort();
+    expect(motionComponents).toEqual(['builder-terminal-section.tsx', 'partner-network-map.tsx']);
     expect(readFileSync(join(componentDirectory, 'landing-motion.tsx'), 'utf8')).toContain(
       "from 'gsap'",
     );

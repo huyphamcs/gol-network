@@ -3,10 +3,49 @@ import { expect, test } from '@playwright/test';
 const headline = 'One account. Every market.';
 
 test.describe('public landing page', () => {
+  test('opens with a prominent brand, launch actions and a full-height hero', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+
+    const header = page.getByRole('banner');
+    await expect(header.getByRole('link', { name: 'Gol Network home' })).toBeVisible();
+    await expect(header.getByRole('link', { name: 'Launch app', exact: true })).toBeVisible();
+    await expect(
+      page.locator('#hero').getByRole('link', { name: 'Launch app', exact: true }),
+    ).toBeVisible();
+
+    const dimensions = await page.evaluate(() => {
+      const headerElement = document.querySelector('header');
+      const heroElement = document.querySelector<HTMLElement>('#hero');
+      const logoElement = document.querySelector<HTMLImageElement>(
+        'header a[aria-label="Gol Network home"] img',
+      );
+      const brandElement = document.querySelector<HTMLElement>(
+        'header a[aria-label="Gol Network home"] span',
+      );
+      if (!headerElement || !heroElement || !logoElement || !brandElement) {
+        throw new Error('Landing header or hero is missing');
+      }
+      return {
+        brandFontSize: Number.parseFloat(getComputedStyle(brandElement).fontSize),
+        heroHeight: heroElement.getBoundingClientRect().height,
+        headerHeight: headerElement.getBoundingClientRect().height,
+        logoWidth: logoElement.getBoundingClientRect().width,
+        viewportHeight: window.innerHeight,
+      };
+    });
+
+    expect(dimensions.logoWidth).toBeGreaterThanOrEqual(40);
+    expect(dimensions.brandFontSize).toBeGreaterThanOrEqual(18);
+    expect(dimensions.heroHeight).toBeGreaterThanOrEqual(
+      dimensions.viewportHeight - dimensions.headerHeight,
+    );
+  });
+
   test('renders the complete product story and honest status boundary', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1, name: headline })).toBeVisible();
-    await expect(page.getByText('GOL', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('GOL NETWORK', { exact: true }).first()).toBeVisible();
     await expect(page.locator('main > section')).toHaveCount(13);
     await expect(page.locator('[data-visual="network-field"]')).toBeVisible();
     await expect(page.locator('[data-gsap="landing-motion"]')).toHaveAttribute(
@@ -16,7 +55,7 @@ test.describe('public landing page', () => {
     await expect(page.locator('[data-motion-hero-visual]')).toHaveAttribute('style', /transform/);
     await expect(page.getByText('Payment rails', { exact: true })).toBeVisible();
     await expect(page.getByText(/nothing has shipped under the name Gol/).first()).toBeVisible();
-    const venueBoundary = page.getByText(/Gol routes to markets and never becomes one/);
+    const venueBoundary = page.getByText(/Gol Network routes to markets and never becomes one/);
     await venueBoundary.scrollIntoViewIfNeeded();
     await expect(venueBoundary).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
@@ -32,7 +71,7 @@ test.describe('public landing page', () => {
     await expect(page.getByRole('heading', { level: 1, name: headline })).toBeVisible();
     await expect(page.locator('[data-visual="network-field"]')).toBeVisible();
     await expect(page.getByText('Authority and state').first()).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Explore the prototype' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Launch app' }).first()).toBeVisible();
     await context.close();
   });
 
@@ -51,7 +90,7 @@ test.describe('public landing page', () => {
       page.getByRole('heading', { name: 'The primitives that power agent finance.' }),
     ).toBeVisible();
 
-    await page.getByRole('banner').getByRole('link', { name: 'Open prototype' }).click();
+    await page.getByRole('banner').getByRole('link', { name: 'Launch app' }).click();
     await expect(page).toHaveURL(/\/app$/);
     await expect(page.locator('main')).toBeVisible();
   });
@@ -101,9 +140,9 @@ test.describe('public landing page', () => {
     await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
     await page.reload();
     await expect(page.getByRole('heading', { level: 1, name: headline })).toBeVisible();
-    const prototypeLink = page.getByRole('link', { name: 'Explore the prototype' }).first();
-    await prototypeLink.focus();
-    await expect(prototypeLink).toBeFocused();
+    const launchLink = page.getByRole('link', { name: 'Launch app' }).first();
+    await launchLink.focus();
+    await expect(launchLink).toBeFocused();
   });
 
   test('reveals feature details and ASCII art on hover', async ({ page }) => {

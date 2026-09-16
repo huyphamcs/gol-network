@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { AsciiText } from '@/components/ui/ascii-text';
 import { Button } from '@/components/ui/button';
 import { HandsCtaVisual } from '@/components/ui/hands-cta-visual';
 import { landingCopy, versionLadder } from '@/content/landing';
@@ -32,49 +32,49 @@ export function RoadmapSections() {
   return (
     <>
       <LandingSection id="roadmap" labelledBy="roadmap-title" className="p-0 lg:p-0">
-        <div className="relative overflow-hidden px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
-          <Image
-            src="/gol-network-globe.png"
-            alt=""
-            width={1254}
-            height={1254}
-            data-motion-parallax
-            className="pointer-events-none absolute top-0 right-0 hidden size-96 translate-x-1/4 -translate-y-1/4 opacity-15 lg:block"
-          />
-          <SectionHeading
-            id="roadmap-title"
-            eyebrow="The product ladder"
-            title="One account that absorbs the whole surface."
-            copy="This is an absorption map, not a release schedule. Each stage adds capability without changing the authority model underneath."
-          />
+        <div className="grid lg:grid-cols-[2fr_3fr]">
+          <div className="flex items-center border-b border-border px-5 py-16 sm:px-8 lg:border-r lg:border-b-0 lg:px-14 lg:py-20">
+            <SectionHeading
+              id="roadmap-title"
+              eyebrow="The product ladder"
+              title="One account that absorbs the whole surface."
+              copy="This is an absorption map, not a release schedule. Each stage adds capability without changing the authority model underneath."
+              className="max-w-xl"
+            />
+          </div>
+
+          <ol data-motion-list className="bg-card">
+            {versionLadder.map((item, index) => (
+              <li
+                key={item.version}
+                className="grid min-h-40 grid-cols-[5rem_minmax(0,1fr)] border-b border-border last:border-b-0 sm:min-h-44 sm:grid-cols-[7.5rem_minmax(0,1fr)]"
+              >
+                <div className="relative flex items-center border-r border-primary/30 px-5 sm:px-8">
+                  <p className="font-mono text-3xl font-semibold tracking-tight text-primary uppercase sm:text-4xl">
+                    {item.version}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className={
+                      index < 2
+                        ? 'absolute top-1/2 right-0 size-3 -translate-y-1/2 translate-x-1/2 border-2 border-primary bg-primary ring-4 ring-card'
+                        : 'absolute top-1/2 right-0 size-3 -translate-y-1/2 translate-x-1/2 border-2 border-primary bg-card ring-4 ring-card'
+                    }
+                  />
+                </div>
+                <div className="flex flex-col justify-center px-6 py-8 sm:px-10">
+                  <h3 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+                    {item.title}
+                  </h3>
+                  <span aria-hidden="true" className="mt-4 h-px w-10 bg-primary" />
+                  <p className="mt-4 max-w-xl text-sm leading-copy text-muted-foreground sm:text-base">
+                    {item.detail}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
-        <ol
-          data-motion-list
-          className="grid px-5 pb-16 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-12 lg:pb-24"
-        >
-          {versionLadder.map((item, index) => (
-            <li
-              key={item.version}
-              className="relative min-h-64 border-t border-primary py-8 pr-6 sm:pl-6 sm:first:pl-0"
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  className={
-                    index < 2
-                      ? 'absolute -top-2 left-0 size-4 rounded-full border-2 border-card bg-primary ring-1 ring-primary sm:left-6 sm:first:left-0'
-                      : 'absolute -top-2 left-0 size-4 rounded-full border-2 border-primary bg-card sm:left-6 sm:first:left-0'
-                  }
-                />
-                <p className="font-mono text-xs font-semibold text-primary uppercase">
-                  {item.version}
-                </p>
-              </div>
-              <h3 className="mt-8 text-lg font-semibold">{item.title}</h3>
-              <p className="mt-3 text-sm leading-copy text-muted-foreground">{item.detail}</p>
-            </li>
-          ))}
-        </ol>
       </LandingSection>
 
       <InsightSections />
@@ -104,7 +104,7 @@ export function RoadmapSections() {
               id="closer-title"
               className="mt-4 text-3xl leading-tight font-semibold tracking-tight"
             >
-              {landingCopy.closer}
+              <AsciiText>{landingCopy.closer}</AsciiText>
             </h2>
             <p className="mt-3 leading-copy text-foreground/70">
               Start with the limited payment path. See how owner authority and the agent lane remain
@@ -112,7 +112,7 @@ export function RoadmapSections() {
             </p>
             <Button asChild size="lg" className="mt-6">
               <Link href="/app">
-                Explore the prototype
+                Launch app
                 <ArrowRight aria-hidden="true" className="size-4" />
               </Link>
             </Button>
@@ -125,7 +125,11 @@ export function RoadmapSections() {
         labelledBy="ready-title"
         className="relative isolate left-1/2 -ml-[50vw] h-[190vh] min-h-0 w-screen border-border bg-primary p-0 text-foreground lg:p-0"
       >
-        <div className="sticky top-0 flex h-screen min-h-[680px] w-screen items-center justify-center overflow-hidden bg-muted text-foreground">
+        <div className="sticky top-0 flex h-screen min-h-[680px] w-screen items-center justify-center overflow-hidden bg-card text-foreground">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-1/2 z-40 w-full max-w-landing -translate-x-1/2 border-x border-border"
+          />
           <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-5 text-center sm:px-8">
             <p className="font-mono text-xs font-semibold tracking-[0.35em] text-muted-foreground uppercase">
               Ready when you are
@@ -140,7 +144,7 @@ export function RoadmapSections() {
             </h2>
             <Button asChild size="lg" className="mt-12">
               <Link href="/app">
-                Open the prototype
+                Launch app
                 <ArrowRight aria-hidden="true" className="size-4" />
               </Link>
             </Button>

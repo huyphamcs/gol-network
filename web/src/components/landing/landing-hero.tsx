@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowDown, ArrowRight } from 'lucide-react';
+import { AsciiText } from '@/components/ui/ascii-text';
 import { Button } from '@/components/ui/button';
 import { SonarGrid } from '@/components/ui/sonar-grid';
 import { landingCopy } from '@/content/landing';
@@ -11,7 +12,7 @@ export function LandingHero() {
       aria-labelledby="landing-title"
       data-visual="network-field"
       data-motion-hero-panel
-      className="relative mx-auto flex min-h-160 max-w-landing items-center justify-center overflow-hidden border-b border-border bg-card px-5 py-20 text-center sm:px-8 lg:px-12"
+      className="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-landing items-center justify-center overflow-hidden border-b border-border bg-card px-5 py-20 text-center sm:px-8 lg:px-12"
     >
       <SonarGrid
         data-motion-hero-visual
@@ -34,23 +35,23 @@ export function LandingHero() {
       >
         <h1
           id="landing-title"
-          className="max-w-4xl text-5xl leading-none font-semibold tracking-tighter text-balance sm:text-7xl lg:text-8xl"
+          className="text-shadow-hero max-w-4xl text-5xl leading-none font-semibold tracking-tighter text-balance sm:text-7xl lg:text-8xl"
         >
-          {landingCopy.headline}
+          <AsciiText delay={200}>{landingCopy.headline}</AsciiText>
         </h1>
-        <p className="mt-7 text-lg font-medium text-muted-foreground sm:text-xl">
+        <p className="text-shadow-hero mt-7 text-xl font-medium text-muted-foreground sm:text-2xl">
           {landingCopy.lead}
         </p>
         <div className="mt-9 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
           <Button asChild size="lg" className="shadow-panel">
             <Link href="/app">
-              Explore the prototype
+              Launch app
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </Button>
           <Button asChild size="lg" variant="outline" className="bg-card">
             <Link href="#product">
-              See how Gol works
+              See how Gol Network works
               <ArrowDown aria-hidden="true" className="size-4" />
             </Link>
           </Button>

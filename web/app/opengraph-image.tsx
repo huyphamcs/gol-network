@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const alt =
-  'Gol: one account for bounded agents, with a record of allowed and refused actions';
+  'Gol Network: one account for bounded agents, with a record of allowed and refused actions';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -21,7 +21,7 @@ export default function OpenGraphImage() {
       }}
     >
       <div style={{ color: '#2463eb', fontSize: '32px', fontWeight: 700, letterSpacing: '-1px' }}>
-        GOL
+        GOL NETWORK
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
         <div

@@ -5,7 +5,7 @@ export const landingCopy = {
   description:
     'Trade, route, rebalance and pay across on-chain and off-chain markets through one non-custodial account. The owner sets the authority. The agent can only ask.',
   status:
-    'Prototype status: nothing has shipped under the name Gol. This repository demonstrates a limited account and payment path while the broader product remains the design target.',
+    'Prototype status: nothing has shipped under the name Gol Network. This repository demonstrates a limited account and payment path while the broader product remains the design target.',
   boundary:
     'Turn every Morca server off. Then try to exceed the limit. The account still refuses the request.',
   outcome: 'You do not approve opaque transactions. You approve an understandable outcome.',
@@ -42,7 +42,7 @@ export const networkPillars = [
   },
   {
     title: 'Market adapters',
-    detail: 'Venues stay at the edge while Gol keeps one authority boundary.',
+    detail: 'Venues stay at the edge while Gol Network keeps one authority boundary.',
     points: ['Chain-neutral routing', 'Defined integration slots', 'No venue custody'],
     action: 'Review the markets',
     href: '#markets',
@@ -89,12 +89,42 @@ export const platformFeatures = [
 ] as const;
 
 export const completeStack = [
-  { title: 'Agent accounts', detail: 'Owner control with granular permissions and limits.' },
-  { title: 'Policy engine', detail: 'Enforceable rules and fail-closed agent checks.' },
-  { title: 'Refusal records', detail: 'A record of blocked actions and remaining headroom.' },
-  { title: 'Execution logs', detail: 'Visibility into intent, route and system events.' },
-  { title: 'Market router', detail: 'One adapter model for many venues and rails.' },
-  { title: 'Unified state', detail: 'One view of balances, policies and activity.' },
+  {
+    title: 'Agent accounts',
+    detail: 'Owner control with granular permissions and limits.',
+    image: '/stack/agent-accounts-dot-grid.png',
+    label: '01',
+  },
+  {
+    title: 'Policy engine',
+    detail: 'Enforceable rules and fail-closed agent checks.',
+    image: '/stack/policy-engine-dot-grid.png',
+    label: 'Account policy',
+  },
+  {
+    title: 'Refusal records',
+    detail: 'A record of blocked actions and remaining headroom.',
+    image: '/stack/refusal-records-dot-grid.png',
+    label: 'Refused',
+  },
+  {
+    title: 'Execution logs',
+    detail: 'Visibility into intent, route and system events.',
+    image: '/stack/execution-logs-dot-grid.png',
+    label: '04',
+  },
+  {
+    title: 'Market router',
+    detail: 'One adapter model for many venues and rails.',
+    image: '/stack/market-router-dot-grid.png',
+    label: '05',
+  },
+  {
+    title: 'Unified state',
+    detail: 'One view of balances, policies and activity.',
+    image: '/stack/unified-state-dot-grid.png',
+    label: 'Authority and state',
+  },
 ] as const;
 
 export const authorityRoles = [
@@ -102,7 +132,7 @@ export const authorityRoles = [
     eyebrow: 'For owners',
     title: 'You remain in control.',
     detail:
-      'Set amount, recipient, asset, venue, chain and time limits. Keep direct control and the ability to withdraw without Gol.',
+      'Set amount, recipient, asset, venue, chain and time limits. Keep direct control and the ability to withdraw without Gol Network.',
   },
   {
     eyebrow: 'For agents',
@@ -114,7 +144,7 @@ export const authorityRoles = [
     eyebrow: 'For venues',
     title: 'Markets stay at the edge.',
     detail:
-      'Every venue connects through an adapter after the mandate check. Gol routes to markets and never becomes one.',
+      'Every venue connects through an adapter after the mandate check. Gol Network routes to markets and never becomes one.',
   },
 ] as const;
 
@@ -238,7 +268,7 @@ export const currentEvidence = [
 ] as const;
 
 export const currentGaps = [
-  'Nothing is integrated into the complete Gol product yet.',
+  'Nothing is integrated into the complete Gol Network product yet.',
   'The multi-market and multi-chain account is a design target.',
   'Full promised-versus-actual receipts and recovery are not established.',
   'Production readiness and an independent security audit are not established.',

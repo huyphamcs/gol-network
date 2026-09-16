@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { AsciiText } from '@/components/ui/ascii-text';
 import { cn } from '@/lib/utils';
 
 export function LandingSection({
@@ -60,7 +61,7 @@ export function SectionHeading({
         id={id}
         className="mt-4 text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl"
       >
-        {title}
+        <AsciiText>{title}</AsciiText>
       </h2>
       {copy ? (
         <p className="mt-5 max-w-2xl text-base leading-copy text-muted-foreground sm:text-lg">

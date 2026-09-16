@@ -25,6 +25,10 @@
   --ink-foreground: #f8faff;
   --ascii-canvas: #ffffff;
   --ascii-foreground: #123b9a;
+  --terminal: #2b303b;
+  --terminal-titlebar: #20242c;
+  --terminal-foreground: #eef1f6;
+  --terminal-muted: #9da6b5;
   --landing-foreground: #061334;
   --border: #dfe5ef;
   --input: #dfe5ef;
@@ -33,6 +37,8 @@
   --line-height-copy: 1.55;
   --line-height-tight: 1.08;
   --panel-shadow: 0 18px 45px rgb(32 57 91 / 0.05);
+  --terminal-shadow: 0 24px 55px rgb(16 19 24 / 0.24);
+  --hero-copy-shadow: 0 1px 2px rgb(255 255 255 / 0.98), 0 0 18px rgb(255 255 255 / 0.9);
   --scrollbar-thumb: #c4cad4;
   --scrollbar-thumb-hover: #9ba4b2;
 }
@@ -68,6 +74,7 @@
   --input: #242428;
   --ring: #4c8dff;
   --panel-shadow: none;
+  --hero-copy-shadow: 0 1px 2px rgb(0 0 0 / 0.98), 0 0 18px rgb(0 0 0 / 0.9);
   --scrollbar-thumb: #34343a;
   --scrollbar-thumb-hover: #4b4b53;
 }
@@ -95,6 +102,10 @@
   --color-ink-foreground: var(--ink-foreground);
   --color-ascii-canvas: var(--ascii-canvas);
   --color-ascii-foreground: var(--ascii-foreground);
+  --color-terminal: var(--terminal);
+  --color-terminal-titlebar: var(--terminal-titlebar);
+  --color-terminal-foreground: var(--terminal-foreground);
+  --color-terminal-muted: var(--terminal-muted);
   --color-landing-foreground: var(--landing-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -113,6 +124,8 @@
   --leading-copy: var(--line-height-copy);
   --leading-tight: var(--line-height-tight);
   --shadow-panel: var(--panel-shadow);
+  --shadow-terminal: var(--terminal-shadow);
+  --text-shadow-hero: var(--hero-copy-shadow);
   --container-landing: 96rem;
 
   --animate-sheet-in: sheet-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;

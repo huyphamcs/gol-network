@@ -9,6 +9,7 @@ interface DotPatternProps extends SVGProps<SVGSVGElement> {
   cx?: number;
   cy?: number;
   cr?: number;
+  fade?: boolean;
 }
 
 export function DotPattern({
@@ -19,6 +20,7 @@ export function DotPattern({
   cx = 1,
   cy = 1,
   cr = 1,
+  fade = false,
   className,
   ...props
 }: DotPatternProps) {
@@ -27,7 +29,11 @@ export function DotPattern({
   return (
     <svg
       aria-hidden="true"
-      className={cn('pointer-events-none absolute inset-0 size-full', className)}
+      className={cn(
+        'pointer-events-none absolute inset-0 size-full',
+        fade && '[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]',
+        className,
+      )}
       {...props}
     >
       <defs>

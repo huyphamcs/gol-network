@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, BarChart3, BookOpen, Braces, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { DotPattern } from '@/components/ui/dot-pattern';
 import { landingResources } from '@/content/landing';
 import { BuilderTerminalSection } from './builder-terminal-section';
 import { Eyebrow, LandingSection } from './landing-primitives';
@@ -51,12 +52,13 @@ export function MarketSections() {
           </p>
           <Button asChild size="lg" className="mt-6">
             <Link href="/app">
-              Explore the prototype
+              Launch app
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </Button>
         </div>
-        <div className="relative min-h-64 bg-muted lg:col-span-2">
+        <div className="relative min-h-64 overflow-hidden bg-muted lg:col-span-2">
+          <DotPattern width={20} height={20} fade className="text-primary/20" />
           <Image
             src="/gol-network-modules.png"
             alt=""

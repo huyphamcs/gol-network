@@ -36,8 +36,10 @@ function LoaderWordmark() {
           className="flex items-center gap-5 will-change-transform"
           style={{ transform: 'translateY(110%)' }}
         >
-          <GolLogo className="size-16 brightness-0 invert sm:size-20" />
-          <span className="font-pixel-wordmark text-5xl leading-none sm:text-7xl">GOL</span>
+          <GolLogo className="size-20 brightness-0 invert sm:size-28" />
+          <span className="font-pixel-wordmark text-6xl leading-none tracking-tight sm:text-8xl">
+            GOL NETWORK
+          </span>
         </div>
       </div>
       <p className="mt-5 overflow-hidden text-center font-mono text-xs tracking-widest uppercase sm:text-sm">

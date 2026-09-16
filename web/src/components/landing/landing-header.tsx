@@ -59,15 +59,17 @@ export function LandingHeader() {
         Skip to content
       </a>
 
-      <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-border bg-card">
         <div className="mx-auto grid h-16 max-w-landing grid-cols-[1fr_auto_1fr] items-center border-x border-border bg-card px-3 sm:px-8 lg:px-12">
           <Link
             href="/"
             aria-label="Gol Network home"
             className="flex min-h-11 w-fit shrink-0 items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <GolLogo className="size-7" />
-            <span className="hidden text-sm leading-none font-semibold sm:inline">Gol Network</span>
+            <GolLogo className="size-10" />
+            <span className="font-pixel-wordmark hidden text-lg leading-none sm:inline">
+              Gol Network
+            </span>
           </Link>
 
           <Button
@@ -95,10 +97,9 @@ export function LandingHeader() {
             </span>
           </Button>
 
-          <Button asChild size="sm" className="min-h-11 justify-self-end px-4">
+          <Button asChild size="sm" className="min-h-11 justify-self-end px-4 text-base">
             <Link href="/app">
-              <span className="hidden sm:inline">Open prototype</span>
-              <span className="sm:hidden">Open</span>
+              <span>Launch app</span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </Button>
@@ -140,11 +141,11 @@ export function LandingHeader() {
 
         <div
           className={cn(
-            'absolute inset-0 overflow-y-auto bg-background px-5 py-12 text-foreground transition-[clip-path] duration-700 ease-in-out [clip-path:inset(0_0_100%_0)] sm:px-8 lg:px-12 lg:py-16 motion-reduce:transition-none',
+            'absolute inset-0 flex flex-col overflow-y-auto bg-card text-foreground transition-[clip-path] duration-700 ease-in-out [clip-path:inset(0_0_100%_0)] motion-reduce:transition-none',
             open && 'delay-500 [clip-path:inset(0_0_0_0)]',
           )}
         >
-          <div className="mx-auto grid max-w-landing gap-12 lg:grid-cols-[1fr_2fr]">
+          <div className="mx-auto grid w-full flex-1 max-w-landing gap-12 border-x border-b border-border px-5 py-12 lg:grid-cols-[1fr_2fr] sm:px-8 lg:px-12 lg:py-16">
             <aside className="flex flex-col gap-10 font-mono text-xs tracking-widest uppercase">
               <div className="overflow-hidden">
                 <p
@@ -153,7 +154,7 @@ export function LandingHeader() {
                     open ? 'delay-700 translate-y-0' : 'translate-y-full',
                   )}
                 >
-                  The Gol system
+                  The Gol Network system
                 </p>
               </div>
               <div className="space-y-3 text-muted-foreground">

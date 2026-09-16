@@ -10,9 +10,8 @@ import { cn } from '@/lib/utils';
 const ASCII_RAMP = ' .:co0O8#@';
 const ASCII_BACKGROUND = '#ffffff';
 const SCENE_BACKGROUND = '#000000';
-const ASCII_FOREGROUND = '#123b9a';
 const MODEL_MATERIAL_COLOR = '#ffffff';
-const ASCII_HOVER = '#06133d';
+const PRIMARY_FALLBACK = '#2463eb';
 const RIPPLE_DURATION = 1_150;
 
 const hashCell = (x: number, y: number, seed: number) => {
@@ -213,7 +212,21 @@ function HandsAsciiScene({
   const parallax = useRef<THREE.Group>(null);
   const target = useRef<THREE.WebGLRenderTarget | null>(null);
   const pixels = useRef<Uint8Array | null>(null);
+  const primaryColor = useRef(PRIMARY_FALLBACK);
   const { gl, scene, camera, size } = useThree();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncPrimaryColor = () => {
+      primaryColor.current =
+        getComputedStyle(root).getPropertyValue('--primary').trim() || PRIMARY_FALLBACK;
+    };
+    syncPrimaryColor();
+
+    const observer = new MutationObserver(syncPrimaryColor);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const cols = Math.max(96, Math.min(360, Math.floor(size.width / 6)));
@@ -304,10 +317,8 @@ function HandsAsciiScene({
           1,
           Math.min(ASCII_RAMP.length - 1, Math.floor(shapedLevel * ASCII_RAMP.length)),
         );
-        const pointer = pointerRef.current;
         const pixelX = col / target.current.width;
         const pixelY = 1 - row / target.current.height;
-        const pointerDistance = Math.hypot((pixelX - pointer.x) * aspect, pixelY - pointer.y);
         const ringWobble = 0.89 + hashCell(col * 5.31, row * 5.31, 0) * 0.22;
         const rippleDistance =
           Math.hypot((pixelX - ripple.x) * aspect, pixelY - ripple.y) * ringWobble;
@@ -318,15 +329,14 @@ function HandsAsciiScene({
         const ripplePixel =
           rippleStrength > 0.02 &&
           hashCell(col * 2.71, row * 2.71, rippleTick * 31.3) < rippleStrength * 0.55;
-        const hovering = pointer.active && pointerDistance < 0.075;
         context.globalAlpha = Math.min(1, 0.42 + shapedLevel * 0.58 + rippleStrength * 0.3);
         if (ripplePixel) {
           glyphIndex = 1 + Math.floor(hashCell(col, row, rippleTick) * 4);
-          context.fillStyle = ASCII_HOVER;
+          context.fillStyle = primaryColor.current;
           context.fillRect(col * cellWidth, height - (row + 1) * cellHeight, cellWidth, cellHeight);
           context.fillStyle = ASCII_BACKGROUND;
         } else {
-          context.fillStyle = hovering ? ASCII_HOVER : ASCII_FOREGROUND;
+          context.fillStyle = primaryColor.current;
         }
         context.fillText(
           ASCII_RAMP[glyphIndex] ?? '@',
