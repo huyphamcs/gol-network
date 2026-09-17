@@ -8,7 +8,7 @@ the production host is managed over SSH and no SSM session is required.
 
 | Item                            | Value                                                                 |
 | ------------------------------- | --------------------------------------------------------------------- |
-| Repository                      | `https://github.com/hien17/gol-network.git`                           |
+| Repository                      | `https://github.com/Gol-Network/gol-network.git`                      |
 | Production host                 | `ec2-user@16.76.174.242`                                              |
 | EC2 instance                    | `i-0551fb8ae101f65d0` (`gol-production`)                              |
 | AWS region                      | `ap-northeast-1`                                                      |

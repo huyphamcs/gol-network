@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repo_dir="${GOL_REPO_DIR:-/opt/gol-network}"
-github_repository="${GITHUB_REPOSITORY:-hien17/gol-network}"
+github_repository="${GITHUB_REPOSITORY:-Gol-Network/gol-network}"
 [[ "$github_repository" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]] || {
   echo 'GitHub repository is invalid' >&2
   exit 1
