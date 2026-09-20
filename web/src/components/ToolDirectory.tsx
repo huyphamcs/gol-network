@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GolLogo } from '@/components/ui/gol-logo';
 import { GOL_TOOLS } from '@/lib/gol-tool-registry';
+import { appPath } from '@/lib/app-path';
 
 type ThemeMode = 'dark' | 'light';
 
@@ -91,7 +92,7 @@ export function ToolDirectory() {
 
   useEffect(() => {
     const controller = new AbortController();
-    void fetch('/api/aave/mcp', { signal: controller.signal })
+    void fetch(appPath('/api/aave/mcp'), { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error('Aave MCP tool discovery is unavailable.');
         const discovered = parseTools(await response.json());
@@ -163,12 +164,12 @@ export function ToolDirectory() {
               </Button>
             </div>
             <Button asChild variant="outline" size="sm">
-              <a href="/preview">
+              <a href={appPath('/preview')}>
                 <LayoutGrid size={14} /> Card gallery
               </a>
             </Button>
             <Button asChild variant="outline" size="sm">
-              <a href="/">
+              <a href={appPath('/')}>
                 <ArrowLeft size={14} /> GOL home
               </a>
             </Button>

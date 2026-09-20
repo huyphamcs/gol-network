@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { DM_Sans, JetBrains_Mono, Silkscreen } from 'next/font/google';
 import { SiteTransition } from '@/components/site-transition';
 import { publicOrigin } from '@/content/site';
+import { appPath } from '@/lib/app-path';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -27,8 +28,8 @@ const silkscreen = Silkscreen({
 export const metadata: Metadata = {
   metadataBase: new URL(publicOrigin),
   icons: {
-    icon: [{ url: '/gol-mark-blue.svg', type: 'image/svg+xml' }],
-    shortcut: '/gol-mark-blue.svg',
+    icon: [{ url: appPath('/gol-mark-blue.svg'), type: 'image/svg+xml' }],
+    shortcut: appPath('/gol-mark-blue.svg'),
   },
   title: {
     default: 'Gol Network | One account. Every market.',

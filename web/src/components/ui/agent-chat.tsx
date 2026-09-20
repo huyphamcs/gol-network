@@ -13,6 +13,7 @@ import {
   WalletCards,
   Wrench,
 } from 'lucide-react';
+import { appPath } from '@/lib/app-path';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -526,7 +527,7 @@ function ChatMessageText({ message, className }: { message: ChatMessage; classNa
 function AgentOutcomeMessage({ followup }: { followup: OutcomeFollowupView }) {
   return (
     <div className="flex items-start gap-3" aria-live="polite">
-      <img src="/gol-mark-blue.svg" alt="" className="mt-1 size-9 shrink-0" />
+      <img src={appPath('/gol-mark-blue.svg')} alt="" className="mt-1 size-9 shrink-0" />
       <div className="max-w-[88%] rounded-xl rounded-tl-md border border-border bg-muted px-5 py-3">
         <p className="text-sm leading-copy text-foreground">
           {followup.text}
@@ -630,7 +631,7 @@ export function AgentChat(props: AgentChatProps) {
   }, [historyScope, hydratedHistoryScope, messages, outcomeFollowups]);
 
   useEffect(() => {
-    void fetch('/api/aave/mcp')
+    void fetch(appPath('/api/aave/mcp'))
       .then(async (response) => {
         if (!response.ok) return;
         const body = (await response.json()) as { tools?: unknown[] };
@@ -938,7 +939,7 @@ export function AgentChat(props: AgentChatProps) {
             className="relative size-10 rounded-full text-muted-foreground"
           >
             <a
-              href="/tools"
+              href={appPath('/tools')}
               aria-label={toolCount === null ? 'Connecting tools' : `${toolCount} agent tools`}
               title="Agent tools"
             >
@@ -977,7 +978,11 @@ export function AgentChat(props: AgentChatProps) {
                 className={cn('flex items-start gap-3', message.role === 'user' && 'justify-end')}
               >
                 {message.role === 'agent' && (
-                  <img src="/gol-mark-blue.svg" alt="" className="mt-1 size-9 shrink-0" />
+                  <img
+                    src={appPath('/gol-mark-blue.svg')}
+                    alt=""
+                    className="mt-1 size-9 shrink-0"
+                  />
                 )}
                 <div
                   className={cn(

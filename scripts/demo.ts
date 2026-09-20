@@ -7,6 +7,7 @@ const recipientLabel = process.env.GOL_DEMO_RECIPIENT_LABEL ?? 'Design contracto
 const pollIntervalMs = numberFromEnv('GOL_DEMO_POLL_MS', 2_000);
 const journalTimeoutMs = numberFromEnv('GOL_DEMO_JOURNAL_TIMEOUT_MS', 180_000);
 const graphTimeoutMs = numberFromEnv('GOL_DEMO_GRAPH_TIMEOUT_MS', 180_000);
+const appBasePath = '/app';
 
 if (!baseUrl.startsWith('https://') && !baseUrl.startsWith('http://127.0.0.1')) {
   throw new Error('GOL_API_URL must use HTTPS outside localhost');
@@ -151,7 +152,7 @@ async function requestJson(
   path: string,
   options?: { method: 'POST'; body: Record<string, unknown> },
 ): Promise<Record<string, unknown>> {
-  const response = await fetch(`${baseUrl}${path}`, {
+  const response = await fetch(`${baseUrl}${appBasePath}${path}`, {
     method: options?.method ?? 'GET',
     headers: {
       authorization: `Bearer ${token}`,

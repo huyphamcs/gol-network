@@ -14,6 +14,8 @@ These rules apply to `web/` in addition to the repository root guide. Keep the m
 
 ## Architecture
 
+- The deployed web application uses the build-time base path `/app`. Keep pages, route handlers,
+  client requests, public assets, health checks, and browser tests inside that namespace.
 - `app/` owns routes, route handlers, layouts, providers, and global CSS.
 - `src/server/` owns privileged orchestration, chain reads, journal access, and runtime environment parsing.
 - `src/client/` owns browser-safe backend adapters and view models; `src/components/` owns React UI.

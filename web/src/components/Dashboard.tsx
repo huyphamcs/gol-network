@@ -33,6 +33,7 @@ import {
   WalletCards,
   type LucideIcon,
 } from 'lucide-react';
+import { appPath } from '@/lib/app-path';
 import { SiGoogle } from 'react-icons/si';
 import { explorerAddressUrl, explorerTxUrl, type PublicConfig } from '@/config';
 import { PAYMENT_STAGES, TRANSACTION_PHASES } from '@/client/stages';
@@ -319,7 +320,7 @@ export function Dashboard(props: DashboardProps) {
       <header className="flex h-[68px] items-center justify-between border-b border-border px-4 sm:h-[76px] sm:px-7">
         <div className="flex items-center gap-3">
           <a className="flex items-center gap-2" href="#top">
-            <img className="size-8 sm:size-9" src="/gol-mark-blue.svg" alt="" />
+            <img className="size-8 sm:size-9" src={appPath('/gol-mark-blue.svg')} alt="" />
             <span className="font-pixel-wordmark text-[10px] sm:text-sm">GOL Network</span>
           </a>
           {config.mode === 'fixture' && (
@@ -789,7 +790,7 @@ function WalletConnectionGate({
       <section className="relative z-10 w-full max-w-lg">
         <Card className="w-full bg-card/95 shadow-panel backdrop-blur-sm">
           <CardContent className="px-6 py-8 text-center sm:px-12 sm:py-12">
-            <img className="mx-auto size-16" src="/gol-mark-blue.svg" alt="GOL" />
+            <img className="mx-auto size-16" src={appPath('/gol-mark-blue.svg')} alt="GOL" />
             <h1 className="font-pixel-wordmark mt-5 text-2xl sm:text-3xl">GOL Network</h1>
             <h2 className="mt-7 text-xl font-semibold">Reconnect your wallet</h2>
             <p className="mt-2 text-sm leading-copy text-muted-foreground">
@@ -853,7 +854,7 @@ function AccountLoadingGate({
     >
       <header className="flex h-[68px] items-center justify-between border-b border-border px-4 sm:px-7">
         <a className="flex items-center gap-2" href="#account">
-          <img className="size-8" src="/gol-mark-blue.svg" alt="" />
+          <img className="size-8" src={appPath('/gol-mark-blue.svg')} alt="" />
           <span className="font-pixel-wordmark text-[10px] sm:text-sm">GOL Network</span>
         </a>
         <div className="flex items-center gap-3">
@@ -917,7 +918,7 @@ function SetupGate(
     >
       <header className="flex h-[68px] items-center justify-between border-b border-border px-4 sm:px-7">
         <a className="flex items-center gap-2" href="#setup">
-          <img className="size-8" src="/gol-mark-blue.svg" alt="" />
+          <img className="size-8" src={appPath('/gol-mark-blue.svg')} alt="" />
           <span className="font-pixel-wordmark text-[10px] sm:text-sm">GOL Network</span>
         </a>
         <div className="flex items-center gap-2">
@@ -1180,7 +1181,7 @@ function AccountProfileHeader({
             className="absolute -bottom-0.5 -right-0.5 grid size-6 place-items-center rounded-full border-2 border-background bg-primary p-1.5"
             title={config.chainName}
           >
-            <img src="/arc-mark.png" alt="" className="size-full object-contain" />
+            <img src={appPath('/arc-mark.png')} alt="" className="size-full object-contain" />
             <span className="sr-only">{config.chainName}</span>
           </Badge>
         </span>
@@ -1288,7 +1289,11 @@ function WorkspaceActivity(props: {
       <div className="flex flex-wrap items-end justify-between gap-5">
         <div>
           <span className="flex items-center gap-2.5 font-mono text-xs uppercase tracking-[.16em] text-primary">
-            <img src="/the-graph-logo.png" alt="" className="size-6 rounded-full object-cover" />
+            <img
+              src={appPath('/the-graph-logo.png')}
+              alt=""
+              className="size-6 rounded-full object-cover"
+            />
             The Graph
           </span>
           <h3 className="mt-1 text-xl font-semibold tracking-tight">Activity</h3>
@@ -1629,7 +1634,7 @@ function SignInGate({
         <Card id="signin" className="w-full bg-card/95 shadow-panel backdrop-blur-sm">
           <CardContent className="px-6 py-8 sm:px-12 sm:py-12">
             <div className="flex flex-col items-center text-center">
-              <img className="size-16" src="/gol-mark-blue.svg" alt="GOL" />
+              <img className="size-16" src={appPath('/gol-mark-blue.svg')} alt="GOL" />
               <h1 className="font-pixel-wordmark mt-5 text-2xl sm:text-3xl">GOL Network</h1>
               <p className="mt-2 text-sm leading-copy text-muted-foreground">
                 Sign in to your owner-controlled account

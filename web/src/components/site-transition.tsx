@@ -4,6 +4,7 @@ import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import { GolLogo } from '@/components/ui/gol-logo';
+import { APP_BASE_PATH, stripAppBasePath } from '@/lib/app-path';
 
 const TILE_COLUMNS = 26;
 const TILE_ROWS = 14;
@@ -250,7 +251,7 @@ export function SiteTransition({ children }: { children: React.ReactNode }) {
   }, []);
 
   React.useEffect(() => {
-    if (pendingPathRef.current === pathname) {
+    if (pendingPathRef.current === stripAppBasePath(pathname)) {
       const frame = window.requestAnimationFrame(reveal);
       return () => window.cancelAnimationFrame(frame);
     }
@@ -288,7 +289,7 @@ export function SiteTransition({ children }: { children: React.ReactNode }) {
             return;
           }
 
-          pendingPathRef.current = url.pathname;
+          pendingPathRef.current = stripAppBasePath(url.pathname);
           router.push(`${url.pathname}${url.search}${url.hash}`);
           timeoutRef.current = window.setTimeout(reveal, NAVIGATION_TIMEOUT);
         },
@@ -327,7 +328,12 @@ export function SiteTransition({ children }: { children: React.ReactNode }) {
       }
 
       const url = new URL(anchor.href, window.location.href);
-      if (url.origin !== window.location.origin || url.pathname.startsWith('/api/')) return;
+      if (
+        url.origin !== window.location.origin ||
+        url.pathname.startsWith(`${APP_BASE_PATH}/api/`)
+      ) {
+        return;
+      }
 
       const current = window.location;
       const sameDocument = url.pathname === current.pathname && url.search === current.search;

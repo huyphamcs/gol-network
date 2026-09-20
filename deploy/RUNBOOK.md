@@ -228,7 +228,7 @@ and requires the internal health check to return 200. Do not bypass it with an a
 Run all checks below and record the commit/time in the release note or incident ticket:
 
 ```bash
-curl -fsS https://gol.network/api/health
+curl -fsS https://gol.network/app/api/health
 curl -fsSI https://gol.network/app
 
 ssh -i "$SSH_KEY" "$SSH_HOST" \
@@ -236,7 +236,7 @@ ssh -i "$SSH_KEY" "$SSH_HOST" \
    -f deploy/docker-compose.yml ps"
 ```
 
-Expected `/api/health` invariants:
+Expected `/app/api/health` invariants:
 
 - `ready: true`
 - `chainId: 5042002`, `network: "arc-testnet"`, `mode: "live"`
@@ -282,7 +282,7 @@ rollback undoes an on-chain transaction.
 | Graph HTTP `429`                                   | Stop polling; check Studio quota/rate limit, use the current endpoint/API key, and retry after the provider window.                                           |
 | Graph `status=unavailable`                         | Verify `GRAPH_QUERY_URL` and API key, then run the authenticated `_meta` query. Check that Studio indexing has caught up to the factory start block.          |
 | `hasIndexingErrors=true`                           | Stop claiming the subgraph is live; inspect Studio indexing errors and fix manifest/mapping before changing production.                                       |
-| `/api/health` has `sourceCommit=null`              | A stack was recreated outside `remote-release.sh`; rerun the standard release script for the exact commit.                                                    |
+| `/app/api/health` has `sourceCommit=null`          | A stack was recreated outside `remote-release.sh`; rerun the standard release script for the exact commit.                                                    |
 | `remote-release.sh` says dirty/mismatched checkout | Do not force it. Fetch the intended commit, remove only reviewed generated artifacts, and ensure the checkout exactly matches the release hash.               |
 | Worker `SIGNER_BLOCKED` / gas insufficient         | Check the active owner mandate, KMS signer address, Arc native-gas reserve, and worker logs. Do not bypass contract policy.                                   |
 | Fund/payment transaction reverted                  | Verify Arc chain ID, official Arc USDC address, account address, allowance/funds, and the exact contract error. Record the refusal; do not fabricate success. |
@@ -297,7 +297,7 @@ Before declaring a release complete, retain only non-secret evidence:
 - contract address, deployment block, transaction hash, and manifest source commit;
 - Graph slug, version, query URL, `_meta` result, indexing block, and error status;
 - S3 pre-deploy backup URI;
-- public `/api/health` response and container health output;
+- public `/app/api/health` response and container health output;
 - smoke-test transaction/refusal hashes and timestamps.
 
 Do not record deploy keys, API keys, wallet material, database passwords, or credential-

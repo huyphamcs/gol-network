@@ -3,6 +3,7 @@
 import { useId } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { appPath } from '@/lib/app-path';
 
 export type NetworkLayerKind = 'owner' | 'account' | 'policy' | 'adapters' | 'rails';
 
@@ -65,7 +66,7 @@ function LayerSculpture({ kind, hatchId }: { kind: NetworkLayerKind; hatchId: st
           <polygon points="240,0 316,-32 316,26 240,58" className="fill-primary/10" />
           <path d="M164 26L240 -6L316 26 M240 -6V58" fill="none" strokeDasharray="4 4" />
           <image
-            href="/gol-mark-blue.svg"
+            href={appPath('/gol-mark-blue.svg')}
             x="-22"
             y="-22"
             width="44"

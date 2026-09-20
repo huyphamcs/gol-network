@@ -103,7 +103,6 @@ describe('landing content boundaries', () => {
   it('keeps privileged modules out and limits client code to interactive UI boundaries', () => {
     const componentDirectory = join(process.cwd(), 'src/components/landing');
     const sources = [
-      readFileSync(join(process.cwd(), 'app/page.tsx'), 'utf8'),
       ...readdirSync(componentDirectory)
         .filter((file) => file.endsWith('.tsx'))
         .map((file) => readFileSync(join(componentDirectory, file), 'utf8')),

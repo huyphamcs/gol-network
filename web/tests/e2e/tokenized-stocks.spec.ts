@@ -4,7 +4,7 @@ const READY = { timeout: 15_000 };
 
 async function openTab(page: Page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto('/tokenized-stocks');
+  await page.goto('/app/tokenized-stocks');
   await expect(page.getByText('MOCK UI', { exact: true })).toBeVisible(READY);
   await expect(page.getByRole('heading', { name: 'Stock tokens' })).toBeVisible(READY);
 }
@@ -15,7 +15,7 @@ test.describe('tokenized stocks (Base hackathon mock)', () => {
   test('keeps the mock route isolated without restoring the removed prototype header', async ({
     page,
   }) => {
-    await page.goto('/tokenized-stocks');
+    await page.goto('/app/tokenized-stocks');
     await expect(page.getByText('MOCK UI', { exact: true })).toBeVisible(READY);
     const wordmark = page.locator('header').getByText('GOL Network', { exact: true });
     await expect(wordmark).toBeVisible();

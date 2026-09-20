@@ -1,4 +1,5 @@
 import { HttpAgent, type BaseEvent, type Message } from '@ag-ui/client';
+import { appPath } from '@/lib/app-path';
 
 export type AgentHistoryMessage = {
   id: string;
@@ -82,7 +83,7 @@ export async function runGolAgent(options: RunGolAgentOptions): Promise<RunGolAg
   const initialIds = new Set(initialMessages.map((message) => message.id));
   const agent = new HttpAgent({
     agentId: 'gol-agent',
-    url: '/api/agent/run',
+    url: appPath('/api/agent/run'),
     threadId: options.threadId,
     initialMessages,
     initialState: {

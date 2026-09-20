@@ -5,10 +5,10 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
-      allow: '/',
-      disallow: ['/api/', '/preview', '/tokenized-stocks'],
+      allow: '/app',
+      disallow: ['/app/api/', '/app/preview', '/app/tokenized-stocks'],
     },
-    sitemap: `${publicOrigin}/sitemap.xml`,
+    sitemap: `${publicOrigin}/app/sitemap.xml`,
     host: publicOrigin,
   };
 }

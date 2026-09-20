@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const TABS = [
-  { href: '/app', label: 'Arc testnet', match: (path: string) => path === '/app' },
+  { href: '/', label: 'Arc testnet', match: (path: string) => path === '/' || path === '/app' },
   {
     href: '/tokenized-stocks',
     label: 'Tokenized stocks',

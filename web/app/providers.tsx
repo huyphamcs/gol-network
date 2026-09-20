@@ -3,6 +3,7 @@
 import { PrivyProvider } from '@privy-io/react-auth';
 import type { ReactNode } from 'react';
 import type { PublicConfig } from '@/config';
+import { appPath } from '@/lib/app-path';
 
 export function Providers({ config, children }: { config: PublicConfig; children: ReactNode }) {
   if (!config.privyAppId) return children;
@@ -25,7 +26,7 @@ export function Providers({ config, children }: { config: PublicConfig; children
         appearance: {
           theme: '#0b0b0c',
           accentColor: '#3478f6',
-          logo: '/gol-mark-blue.svg',
+          logo: appPath('/gol-mark-blue.svg'),
           landingHeader: 'Sign in to GOL Network',
         },
       }}

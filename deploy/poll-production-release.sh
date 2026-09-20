@@ -69,7 +69,7 @@ test "$main_commit" = "$release_commit" || {
 }
 
 deployed_commit="$(
-  curl --fail --show-error --silent --max-time 15 https://gol.network/api/health 2>/dev/null |
+  curl --fail --show-error --silent --max-time 15 https://gol.network/app/api/health 2>/dev/null |
     python3 -c 'import json, sys; print(json.load(sys.stdin).get("sourceCommit", ""))' 2>/dev/null || true
 )"
 if test "$deployed_commit" = "$release_commit"; then
@@ -92,7 +92,7 @@ GOL_REPO_DIR="$repo_dir" \
   bash "$repo_dir/deploy/remote-release.sh" "$release_commit"
 
 health="$(curl --fail --show-error --silent --retry 12 --retry-all-errors \
-  --retry-delay 5 https://gol.network/api/health)"
+  --retry-delay 5 https://gol.network/app/api/health)"
 test "$(python3 -c 'import json, sys; print(json.load(sys.stdin).get("ready", False))' <<<"$health")" = 'True'
 test "$(python3 -c 'import json, sys; print(json.load(sys.stdin).get("sourceCommit", ""))' <<<"$health")" = "$release_commit"
 echo "production deployed $release_commit"

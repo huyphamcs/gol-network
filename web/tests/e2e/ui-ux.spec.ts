@@ -56,7 +56,7 @@ test.describe('UI and UX coverage', () => {
       });
     });
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.goto('/tools');
+    await page.goto('/app/tools');
 
     const golCards = page.locator('[data-tool-source="gol"]');
     const aaveCards = page.locator('[data-tool-source="aave"]');

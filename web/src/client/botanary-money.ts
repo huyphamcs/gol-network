@@ -1,5 +1,6 @@
 import { hashMessage, parseUnits, type Hex } from 'viem';
 import { z } from 'zod';
+import { appPath } from '@/lib/app-path';
 import type {
   MoneyExecutionResult,
   MoneyReceiveInfo,
@@ -119,7 +120,7 @@ async function request(
 ): Promise<unknown> {
   const token = await getAccessToken();
   if (!token) throw new Error('Sign in again before using owner money actions.');
-  const response = await fetch('/api/botanary/money', {
+  const response = await fetch(appPath('/api/botanary/money'), {
     method: 'POST',
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify({ action, payload }),

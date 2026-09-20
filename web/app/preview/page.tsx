@@ -18,6 +18,7 @@ import {
   Vote,
   XCircle,
 } from 'lucide-react';
+import { appPath } from '@/lib/app-path';
 import { AaveLogo } from '@/components/ui/aave-logo';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -1092,7 +1093,7 @@ export default async function PreviewPage({
         <header className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <img src="/gol-mark-blue.svg" alt="" className="size-8" />
+              <img src={appPath('/gol-mark-blue.svg')} alt="" className="size-8" />
               <span className="font-pixel-wordmark text-sm text-primary">GOL Network</span>
             </div>
             <h1 className="text-3xl font-semibold tracking-tight">GOL tool cards</h1>
@@ -1109,7 +1110,7 @@ export default async function PreviewPage({
                 size="icon"
                 className="size-7"
               >
-                <a href="/preview?theme=light" aria-label="Use light theme">
+                <a href={`${appPath('/preview')}?theme=light`} aria-label="Use light theme">
                   <Sun size={14} />
                 </a>
               </Button>
@@ -1119,7 +1120,7 @@ export default async function PreviewPage({
                 size="icon"
                 className="size-7"
               >
-                <a href="/preview?theme=dark" aria-label="Use dark theme">
+                <a href={`${appPath('/preview')}?theme=dark`} aria-label="Use dark theme">
                   <Moon size={14} />
                 </a>
               </Button>

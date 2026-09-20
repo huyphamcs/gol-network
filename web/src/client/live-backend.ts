@@ -32,7 +32,7 @@ import { createBotanaryMoneyClient } from './botanary-money';
 
 export interface LiveBackendDependencies {
   config: PublicConfig;
-  authedFetch: (path: string, init?: RequestInit) => Promise<Record<string, unknown>>;
+  authedFetch: (path: `/${string}`, init?: RequestInit) => Promise<Record<string, unknown>>;
   getAccessToken: () => Promise<string | null>;
   ownerAddress: () => Address | null;
   ownerProvider: () => Promise<OwnerProvider>;

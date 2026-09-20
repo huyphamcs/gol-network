@@ -15,6 +15,7 @@ import {
   Plus,
   Search,
 } from 'lucide-react';
+import { appPath } from '@/lib/app-path';
 import { useMemo, useState } from 'react';
 import type { PublicConfig } from '@/config';
 import { explorerAddressUrl } from '@/config';
@@ -218,7 +219,7 @@ export function WalletAccountPill({ config, account, auth, onExport }: WalletAcc
               className="absolute -bottom-1 -right-1 grid size-5 place-items-center rounded-full border-2 border-card bg-primary p-1"
               title={config.chainName}
             >
-              <img src="/arc-mark.png" alt="" className="size-full object-contain" />
+              <img src={appPath('/arc-mark.png')} alt="" className="size-full object-contain" />
               <span className="sr-only">{config.chainName}</span>
             </Badge>
           </span>
@@ -500,7 +501,7 @@ function IdentityRow({
             className="absolute -bottom-1 -right-1 grid size-5 place-items-center rounded-full border-2 border-card bg-primary p-1"
             title={config.chainName}
           >
-            <img src="/arc-mark.png" alt="" className="size-full object-contain" />
+            <img src={appPath('/arc-mark.png')} alt="" className="size-full object-contain" />
             <span className="sr-only">{config.chainName}</span>
           </Badge>
         </span>

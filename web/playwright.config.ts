@@ -22,7 +22,7 @@ export default defineConfig({
     },
     {
       command: `GOL_FIXTURE_MODE=true PRIVY_APP_ID= FACTORY_ADDRESS= AGENT_GAS_MANAGED=false NEXT_DIST_DIR=.next-e2e pnpm build && GOL_FIXTURE_MODE=true PRIVY_APP_ID= FACTORY_ADDRESS= AGENT_GAS_MANAGED=false NEXT_DIST_DIR=.next-e2e pnpm start --hostname 127.0.0.1 --port ${webPort}`,
-      url: webUrl,
+      url: `${webUrl}/app`,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },

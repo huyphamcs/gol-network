@@ -1,26 +1,41 @@
 import type { Metadata } from 'next';
-import { LandingPage } from '@/components/landing/landing-page';
+import { Providers } from './providers';
+import { ConfigurationNotice } from '@/components/ConfigurationNotice';
+import { GolApp } from '@/components/GolApp';
+import { publicConfigResult } from '@/server/env';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  description:
-    'One account where AI agents can act across markets inside owner-defined limits, with a record of every refused action.',
-  alternates: { canonical: '/' },
+  title: 'Arc testnet prototype',
+  description: 'Explore the current owner-controlled agent payment prototype on Arc testnet.',
+  alternates: { canonical: '/app' },
   openGraph: {
     type: 'website',
-    siteName: 'Gol Network',
-    url: '/',
-    title: 'Gol Network | One account. Every market.',
-    description:
-      'An agent that can act inside limits you set, with a record of everything it was refused.',
+    siteName: 'Gol',
+    url: '/app',
+    title: 'Gol Arc testnet prototype',
+    description: 'Explore the current owner-controlled agent payment prototype on Arc testnet.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Gol Network | One account. Every market.',
-    description:
-      'An agent that can act inside limits you set, with a record of everything it was refused.',
+    title: 'Gol Arc testnet prototype',
+    description: 'Explore the current owner-controlled agent payment prototype on Arc testnet.',
   },
 };
 
-export default function Page() {
-  return <LandingPage />;
+export default async function AppPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ preview?: string | string[] | undefined }>;
+}) {
+  const result = publicConfigResult();
+  if (!result.ok) return <ConfigurationNotice fields={result.fields} />;
+  const preview = (await searchParams).preview;
+  const forceLoading = process.env.NODE_ENV === 'development' && preview === 'loading';
+  return (
+    <Providers config={result.config}>
+      <GolApp config={result.config} forceLoading={forceLoading} />
+    </Providers>
+  );
 }

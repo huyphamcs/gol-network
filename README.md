@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://gol.network">Live application</a> ·
+  <a href="https://gol.network/app">Live application</a> ·
   <a href="ARCHITECTURE.md">Architecture</a> ·
   <a href="spec/deployment-status.md">Deployment status</a> ·
   <a href="deploy/README.md">Operations</a>

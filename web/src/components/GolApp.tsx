@@ -48,6 +48,7 @@ import type {
 } from '@/client/types';
 import { Dashboard, type DashboardProps, type TransferReview } from './Dashboard';
 import { deriveSteps } from './setup-steps';
+import { appPath } from '@/lib/app-path';
 
 const SEVEN_DAYS_SECONDS = 7 * 24 * 60 * 60;
 
@@ -112,10 +113,10 @@ function PrivyGolApp({ config, forceLoading }: { config: PublicConfig; forceLoad
   preferredRef.current = ownerAddress ?? undefined;
 
   const authedFetch = useCallback(
-    async (path: string, init: RequestInit = {}) => {
+    async (path: `/${string}`, init: RequestInit = {}) => {
       const token = await getAccessToken();
       if (!token) throw new Error('AUTH_REQUIRED');
-      const response = await fetch(path, {
+      const response = await fetch(appPath(path), {
         ...init,
         headers: {
           'content-type': 'application/json',

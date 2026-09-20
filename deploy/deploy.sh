@@ -91,5 +91,5 @@ compose build --pull langgraph-agent web worker
 # Migrate before any traffic reaches the new image.
 compose run --rm migrate
 compose up -d postgres langgraph-agent web worker caddy
-compose exec -T web node -e "fetch('http://127.0.0.1:3000/api/health').then(async r=>{console.log(await r.text());if(!r.ok)process.exit(1)})"
+compose exec -T web node -e "fetch('http://127.0.0.1:3000/app/api/health').then(async r=>{console.log(await r.text());if(!r.ok)process.exit(1)})"
 compose ps
